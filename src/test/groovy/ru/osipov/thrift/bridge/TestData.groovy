@@ -6,7 +6,9 @@ import groovy.transform.CompileStatic
 import org.apache.thrift.TServiceClient
 import ru.osipov.thrift.bridge.domain.TOperation
 import ru.osipov.thrift.bridge.domain.TService
+import ru.osipov.thrift.bridge.test.AnotherTestService
 import ru.osipov.thrift.bridge.test.ErrorInfo
+import ru.osipov.thrift.bridge.test.SubTestService
 import ru.osipov.thrift.bridge.test.TestEnum
 import ru.osipov.thrift.bridge.test.TestException
 import ru.osipov.thrift.bridge.test.TestInnerStruct
@@ -17,19 +19,20 @@ import ru.osipov.thrift.bridge.test.TestStruct
 class TestData {
 
     static String THRIFT_ENDPOINT = 'http://some.com/tapi'
-    static String SERVICE_NAME = 'SomeService'
+    static String SERVICE_NAME = 'TestService'
     static String OPERATION_NAME = 'testOperation'
     static String THRIFT_SIMPLE_FIELD = 'someSimpleField'
+    static String THRIFT_PACKAGE = 'ru.osipov.thrift.bridge.test'
     static Class<? extends TServiceClient> THRIFT_CLIENT_CLASS = TestService.Client
 
     private static ObjectMapper mapper = new ObjectMapper()
 
-    static TService service() {
-        new TService(SERVICE_NAME, THRIFT_CLIENT_CLASS, [rawOperation()])
+    static List<TService> services() {
+        [TService.build(AnotherTestService.Client), TService.build(SubTestService.Client), service()]
     }
 
-    static TOperation rawOperation() {
-        new TOperation(OPERATION_NAME)
+    static TService service() {
+        TService.build(THRIFT_CLIENT_CLASS)
     }
 
     static TOperation operation() {

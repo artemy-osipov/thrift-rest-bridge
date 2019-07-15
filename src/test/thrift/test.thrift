@@ -35,6 +35,13 @@ service TestService {
     ) throws (1: TestException e)
 }
 
+service SubTestService extends TestService {
+
+    void subOperation (
+        1: string simpleField
+    )
+}
+
 service AnotherTestService {
 
     void voidOperation (

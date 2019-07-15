@@ -10,7 +10,14 @@ import static ru.osipov.thrift.bridge.TestData.*
 
 class TServiceTest {
 
-    def service = service()
+    def service = new TService(SERVICE_NAME, THRIFT_CLIENT_CLASS, [(OPERATION_NAME): new TOperation(OPERATION_NAME)])
+
+    @Test
+    void "build should construct TService"() {
+        def res = TService.build(THRIFT_CLIENT_CLASS)
+
+        assert res == service
+    }
 
     @Test
     void "getOperation should return by name"() {
