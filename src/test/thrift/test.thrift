@@ -1,14 +1,14 @@
 namespace java ru.osipov.thrift.bridge.test
 
-struct Test {
+struct TestStruct {
     1: string stringField
     2: bool boolField
     3: i32 intField
     4: TestEnum enumField
-    5: TestComplex complexField
+    5: TestInnerStruct complexField
 }
 
-struct TestComplex {
+struct TestInnerStruct {
     1: string f1
     2: string f2
 }
@@ -29,9 +29,9 @@ struct ErrorInfo {
 
 service TestService {
 
-    list<Test> testOperation (
+    list<TestStruct> testOperation (
         1: string simpleField
-        2: Test complexField
+        2: TestStruct complexField
     ) throws (1: TestException e)
 }
 

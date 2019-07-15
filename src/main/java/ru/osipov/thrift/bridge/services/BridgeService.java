@@ -21,7 +21,7 @@ public class BridgeService {
         TServiceClient thriftClient = operation.getService().buildThriftClient(endpoint);
         Method operationMethod = operation.buildClientMethod(thriftClient.getClass());
 
-        Object response = invokeThrift(thriftClient, operationMethod, thriftConverter.parseArgs(body));
+        Object response = invokeThrift(thriftClient, operationMethod, thriftConverter.parseArgs(operationMethod, body));
 
         return thriftConverter.parseResponse(response);
     }

@@ -7,11 +7,11 @@ import org.apache.thrift.TServiceClient
 import ru.osipov.thrift.bridge.domain.TOperation
 import ru.osipov.thrift.bridge.domain.TService
 import ru.osipov.thrift.bridge.test.ErrorInfo
-import ru.osipov.thrift.bridge.test.Test
-import ru.osipov.thrift.bridge.test.TestComplex
 import ru.osipov.thrift.bridge.test.TestEnum
 import ru.osipov.thrift.bridge.test.TestException
+import ru.osipov.thrift.bridge.test.TestInnerStruct
 import ru.osipov.thrift.bridge.test.TestService
+import ru.osipov.thrift.bridge.test.TestStruct
 
 @CompileStatic
 class TestData {
@@ -36,18 +36,18 @@ class TestData {
         service().getOperation(OPERATION_NAME)
     }
 
-    static Test thriftTest() {
-        new Test().tap {
+    static TestStruct thriftTestStruct() {
+        new TestStruct().tap {
             stringField = 'some'
             boolField = true
             intField = 42
             enumField = TestEnum.ENUM_2
-            complexField = new TestComplex('f1', 'f2')
+            complexField = new TestInnerStruct('f1', 'f2')
         }
     }
 
-    static List<Test> thriftResponse() {
-        [thriftTest(), thriftTest()]
+    static List<TestStruct> thriftResponse() {
+        [thriftTestStruct(), thriftTestStruct()]
     }
 
     static TestException thriftException() {
@@ -60,7 +60,7 @@ class TestData {
     }
 
     static JsonNode restRequest() {
-        def thrift = thriftTest()
+        def thrift = thriftTestStruct()
         mapper.createObjectNode()
                 .put('simpleField', THRIFT_SIMPLE_FIELD)
                 .set('complexField',
@@ -78,7 +78,7 @@ class TestData {
     }
 
     static JsonNode restTest() {
-        def thrift = thriftTest()
+        def thrift = thriftTestStruct()
         mapper.createObjectNode()
                 .put('stringField', thrift.stringField)
                 .put('boolField', thrift.boolField)
