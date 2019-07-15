@@ -1,1 +1,0 @@
-# thrift-json-bridge
