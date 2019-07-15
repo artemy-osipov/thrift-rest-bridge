@@ -16,7 +16,7 @@ public class TServiceRepository {
 
     private final Map<String, TService> serviceMap;
 
-    public TServiceRepository(@Value("bridge.thrift.package") String thriftPackage) {
+    public TServiceRepository(@Value("${bridge.thrift.package}") String thriftPackage) {
         serviceMap = new Reflections(thriftPackage)
                 .getSubTypesOf(TServiceClient.class)
                 .stream()

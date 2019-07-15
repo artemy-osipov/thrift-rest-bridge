@@ -2,7 +2,7 @@ package ru.osipov.thrift.bridge.services;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
-import org.apache.thrift.TException;
+import org.apache.thrift.TBase;
 import org.apache.thrift.TServiceClient;
 import org.springframework.stereotype.Service;
 import ru.osipov.thrift.bridge.domain.TOperation;
@@ -32,10 +32,10 @@ public class BridgeService {
         } catch (IllegalAccessException e) {
             throw new ProxyInvocationException(e);
         } catch (InvocationTargetException e) {
-            if (e.getCause() instanceof TException) {
+            if (e.getCause() instanceof TBase) {
                 return e.getCause();
             } else {
-                throw new ProxyInvocationException(e);
+                throw new ProxyInvocationException(e.getCause());
             }
         }
     }

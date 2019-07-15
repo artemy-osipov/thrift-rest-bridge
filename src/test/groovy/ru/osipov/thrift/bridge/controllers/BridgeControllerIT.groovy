@@ -40,14 +40,16 @@ class BridgeControllerIT {
 
     @Test
     void "services endpoint should return list of services"() {
-        doReturn([service()]).when(thriftRepository).list()
+        def service = service()
+        doReturn([service]).when(thriftRepository).list()
 
         def req = get("/services")
                 .contentType(APPLICATION_JSON_UTF8)
 
         mockMvc.perform(req)
                 .andExpect(status().isOk())
-                .andExpect(jsonPath('$[*].name', is([SERVICE_NAME])))
+                .andExpect(jsonPath('$[0].name', is(service.name)))
+                .andExpect(jsonPath('$[0].operations', is(service.operations.values().name)))
     }
 
     @Test

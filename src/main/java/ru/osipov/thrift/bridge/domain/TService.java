@@ -4,7 +4,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.thrift.TServiceClient;
-import org.apache.thrift.protocol.TCompactProtocol;
+import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.protocol.TProtocol;
 import org.apache.thrift.transport.THttpClient;
 import ru.osipov.thrift.bridge.domain.exception.NotFoundException;
@@ -58,7 +58,7 @@ public class TService {
     @SneakyThrows
     public TServiceClient buildThriftClient(String endpoint) {
         THttpClient thriftClient = new THttpClient(endpoint);
-        TProtocol protocol = new TCompactProtocol(thriftClient);
+        TProtocol protocol = new TBinaryProtocol(thriftClient);
 
         return thriftServiceClass.getConstructor(TProtocol.class)
                 .newInstance(protocol);
