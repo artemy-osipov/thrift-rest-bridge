@@ -1,24 +1,32 @@
 plugins {
     id "java"
     id "groovy"
-    id "org.springframework.boot" version "2.1.6.RELEASE"
+    id "maven-publish"
     id "io.spring.dependency-management" version "1.0.8.RELEASE"
-    id "org.jruyi.thrift" version "0.4.1"
 }
 
-group = "ru.osipov"
-version = "0.0.1-SNAPSHOT"
+allprojects {
+    group = "ru.osipov"
+    version = "0.0.1-SNAPSHOT"
 
-sourceCompatibility = JavaVersion.VERSION_11
-targetCompatibility = JavaVersion.VERSION_11
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
 
-repositories {
-    jcenter()
+    repositories {
+        jcenter()
+    }
+}
+
+dependencyManagement {
+    imports {
+        mavenBom 'org.springframework.boot:spring-boot-dependencies:2.1.6.RELEASE'
+    }
 }
 
 dependencies {
     implementation "org.springframework.boot:spring-boot-starter-web"
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+    annotationProcessor "org.springframework.boot:spring-boot-autoconfigure-processor"
 
     compileOnly "org.projectlombok:lombok"
     annotationProcessor "org.projectlombok:lombok"
@@ -31,11 +39,13 @@ dependencies {
 
     testImplementation "org.springframework.boot:spring-boot-starter-test"
     testImplementation "org.codehaus.groovy:groovy-all:2.5.7"
+    testImplementation project(':thrift-example')
 }
 
-compileThrift {
-    sourceDir "$projectDir/src/test/thrift"
-    generator "java"
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.java
+        }
+    }
 }
-
-test.dependsOn("compileThrift")

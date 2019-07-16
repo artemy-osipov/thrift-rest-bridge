@@ -22,7 +22,6 @@ class TestData {
     static String SERVICE_NAME = 'TestService'
     static String OPERATION_NAME = 'testOperation'
     static String THRIFT_SIMPLE_FIELD = 'someSimpleField'
-    static String THRIFT_PACKAGE = 'ru.osipov.thrift.bridge.test'
     static Class<? extends TServiceClient> THRIFT_CLIENT_CLASS = TestService.Client
 
     private static ObjectMapper mapper = new ObjectMapper()

@@ -2,8 +2,8 @@ package ru.osipov.thrift.bridge.services;
 
 import org.apache.thrift.TServiceClient;
 import org.reflections.Reflections;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
+import ru.osipov.thrift.bridge.config.BridgeProperties;
 import ru.osipov.thrift.bridge.domain.TService;
 import ru.osipov.thrift.bridge.domain.exception.NotFoundException;
 
@@ -16,8 +16,8 @@ public class TServiceRepository {
 
     private final Map<String, TService> serviceMap;
 
-    public TServiceRepository(@Value("${bridge.thrift.package}") String thriftPackage) {
-        serviceMap = new Reflections(thriftPackage)
+    public TServiceRepository(BridgeProperties properties) {
+        serviceMap = new Reflections(properties.getScanPackage())
                 .getSubTypesOf(TServiceClient.class)
                 .stream()
                 .map(TService::build)

@@ -1,4 +1,4 @@
-package ru.osipov.thrift.bridge
+package ru.osipov.example
 
 import org.junit.Test
 import org.junit.runner.RunWith

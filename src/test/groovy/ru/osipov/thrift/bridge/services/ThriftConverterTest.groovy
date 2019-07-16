@@ -1,29 +1,28 @@
 package ru.osipov.thrift.bridge.services
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.module.SimpleModule
+import org.apache.thrift.TBase
 import org.junit.Before
 import org.junit.Test
 import org.junit.platform.commons.util.ReflectionUtils
-import org.junit.runner.RunWith
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.json.JsonTest
-import org.springframework.test.context.junit4.SpringRunner
+import ru.osipov.thrift.bridge.controllers.ThriftSerializer
 import ru.osipov.thrift.bridge.test.TestService
 import ru.osipov.thrift.bridge.test.TestStruct
 
 import static ru.osipov.thrift.bridge.TestData.*
 
-@RunWith(SpringRunner)
-@JsonTest
 class ThriftConverterTest {
 
-    @Autowired
-    ObjectMapper mapper
+    ObjectMapper mapper = new ObjectMapper()
 
     ThriftConverter converter
 
     @Before
     void setup() {
+        SimpleModule module = new SimpleModule();
+        module.addSerializer(TBase.class, new ThriftSerializer())
+        mapper.registerModule(module)
         converter = new ThriftConverter(mapper)
     }
 
