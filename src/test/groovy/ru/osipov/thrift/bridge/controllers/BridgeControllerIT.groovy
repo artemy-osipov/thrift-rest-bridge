@@ -1,4 +1,4 @@
-package ru.osipov.example
+package ru.osipov.thrift.bridge.controllers
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.junit.Test
@@ -6,14 +6,10 @@ import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.context.annotation.ComponentScan
-import org.springframework.context.annotation.FilterType
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit4.SpringRunner
 import org.springframework.test.web.servlet.MockMvc
-import ru.osipov.example.TestApplication
-import ru.osipov.thrift.bridge.TestData
-import ru.osipov.thrift.bridge.controllers.BridgeController
+import ru.osipov.thrift.bridge.config.BridgeAutoConfiguration
 import ru.osipov.thrift.bridge.domain.exception.NotFoundException
 import ru.osipov.thrift.bridge.services.BridgeService
 import ru.osipov.thrift.bridge.services.TServiceRepository
@@ -29,6 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static ru.osipov.thrift.bridge.TestData.*
 
 @RunWith(SpringRunner)
+@ContextConfiguration(classes = BridgeAutoConfiguration)
 @WebMvcTest(BridgeController)
 class BridgeControllerIT {
 
@@ -72,14 +69,14 @@ class BridgeControllerIT {
 
     @Test
     void "services endpoint should return service requested by name"() {
-        doReturn(service()).when(thriftRepository).findByName(TestData.SERVICE_NAME)
+        doReturn(service()).when(thriftRepository).findByName(SERVICE_NAME)
 
-        def req = get("/services/{service}", TestData.SERVICE_NAME)
+        def req = get("/services/{service}", SERVICE_NAME)
                 .contentType(APPLICATION_JSON_UTF8)
 
         mockMvc.perform(req)
                 .andExpect(status().isOk())
-                .andExpect(jsonPath('$.name', is(TestData.SERVICE_NAME)))
+                .andExpect(jsonPath('$.name', is(SERVICE_NAME)))
     }
 
     @Test
@@ -97,11 +94,11 @@ class BridgeControllerIT {
     void "services-operations endpoint should proxy request to thrift"() {
         def restRequest = restRequest()
         def restResponse = restResponse()
-        doReturn(service()).when(thriftRepository).findByName(TestData.SERVICE_NAME)
-        doReturn(restResponse).when(bridgeService).proxy(operation(), TestData.THRIFT_ENDPOINT, restRequest)
+        doReturn(service()).when(thriftRepository).findByName(SERVICE_NAME)
+        doReturn(restResponse).when(bridgeService).proxy(operation(), THRIFT_ENDPOINT, restRequest)
 
-        def req = post("/services/{service}/operations/{operation}", TestData.SERVICE_NAME, TestData.OPERATION_NAME)
-                .header('Thrift-Endpoint', TestData.THRIFT_ENDPOINT)
+        def req = post("/services/{service}/operations/{operation}", SERVICE_NAME, OPERATION_NAME)
+                .header('Thrift-Endpoint', THRIFT_ENDPOINT)
                 .contentType(APPLICATION_JSON_UTF8)
                 .content(mapper.writeValueAsString(restRequest))
 
@@ -112,7 +109,7 @@ class BridgeControllerIT {
 
     @Test
     void "services-operations endpoint should fail when requested without endpoint"() {
-        def req = post("/services/{service}/operations/{operation}", TestData.SERVICE_NAME, TestData.OPERATION_NAME)
+        def req = post("/services/{service}/operations/{operation}", SERVICE_NAME, OPERATION_NAME)
                 .contentType(APPLICATION_JSON_UTF8)
                 .content(mapper.writeValueAsString(restRequest()))
 
