@@ -27,21 +27,21 @@ class BridgeServiceTest {
 
     @Test
     void "should proxy request to thrift"() {
-        doReturn(thriftResponse()).when(thriftClient).testOperation(THRIFT_SIMPLE_FIELD, thriftTestStruct())
-        doReturn(restResponse()).when(thriftConverter).parseResponse(thriftResponse())
+        def resp = [thriftTestStruct()]
+        doReturn(resp).when(thriftClient).testOperation(THRIFT_SIMPLE_FIELD, thriftTestStruct())
 
-        def response = service.proxy(operation, THRIFT_ENDPOINT, restRequest())
+        def res = service.proxy(operation, THRIFT_ENDPOINT, restRequest())
 
-        assert response == restResponse()
+        assert res == resp
     }
 
     @Test
     void "should proxy exception from thrift"() {
-        doThrow(thriftException()).when(thriftClient).testOperation(THRIFT_SIMPLE_FIELD, thriftTestStruct())
-        doReturn(restException()).when(thriftConverter).parseResponse(thriftException())
+        def resp = thriftException()
+        doThrow(resp).when(thriftClient).testOperation(THRIFT_SIMPLE_FIELD, thriftTestStruct())
 
-        def response = service.proxy(operation, THRIFT_ENDPOINT, restRequest())
+        def res = service.proxy(operation, THRIFT_ENDPOINT, restRequest())
 
-        assert response == restException()
+        assert res == resp
     }
 }

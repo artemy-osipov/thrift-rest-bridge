@@ -7,4 +7,5 @@ rootProject.name = "thrift-rest-bridge"
 
 include 'thrift-example'
 include 'example'
+include 'jackson-datatype-thrift'
 

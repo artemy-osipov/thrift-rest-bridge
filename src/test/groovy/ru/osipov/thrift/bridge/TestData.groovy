@@ -48,10 +48,6 @@ class TestData {
         }
     }
 
-    static List<TestStruct> thriftResponse() {
-        [thriftTestStruct(), thriftTestStruct()]
-    }
-
     static TestException thriftException() {
         new TestException([
                 new ErrorInfo().tap {
@@ -79,7 +75,7 @@ class TestData {
                 )
     }
 
-    static JsonNode restTest() {
+    static JsonNode restTestStruct() {
         def thrift = thriftTestStruct()
         mapper.createObjectNode()
                 .put('stringField', thrift.stringField)
@@ -91,21 +87,5 @@ class TestData {
                                 .put('f1', thrift.complexField.f1)
                                 .put('f2', thrift.complexField.f2)
                 )
-    }
-
-    static JsonNode restResponse() {
-        mapper.createArrayNode()
-                .add(restTest())
-                .add(restTest())
-    }
-
-    static JsonNode restException() {
-        def thrift = thriftException()
-        mapper.createObjectNode()
-                .set('errors', mapper.createArrayNode().add(
-                        mapper.createObjectNode()
-                                .put('code', thrift.errors[0].code)
-                                .put('message', thrift.errors[0].message)
-                ))
     }
 }

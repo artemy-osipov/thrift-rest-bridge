@@ -17,13 +17,11 @@ public class BridgeService {
 
     private final ThriftConverter thriftConverter;
 
-    public JsonNode proxy(TOperation operation, String endpoint, JsonNode body) {
+    public Object proxy(TOperation operation, String endpoint, JsonNode body) {
         TServiceClient thriftClient = operation.getService().buildThriftClient(endpoint);
         Method operationMethod = operation.buildClientMethod(thriftClient.getClass());
 
-        Object response = invokeThrift(thriftClient, operationMethod, thriftConverter.parseArgs(operationMethod, body));
-
-        return thriftConverter.parseResponse(response);
+        return invokeThrift(thriftClient, operationMethod, thriftConverter.parseArgs(operationMethod, body));
     }
 
     private Object invokeThrift(TServiceClient thriftClient, Method operation, Object[] args) {

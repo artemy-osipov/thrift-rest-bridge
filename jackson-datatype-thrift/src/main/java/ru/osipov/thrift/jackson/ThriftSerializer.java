@@ -1,4 +1,4 @@
-package ru.osipov.thrift.bridge.controllers;
+package ru.osipov.thrift.jackson;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
@@ -7,11 +7,9 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.thrift.TBase;
 import org.apache.thrift.meta_data.FieldMetaData;
-import org.springframework.boot.jackson.JsonComponent;
 
 import java.io.IOException;
 
-@JsonComponent
 public class ThriftSerializer extends JsonSerializer<TBase> {
 
     @Override

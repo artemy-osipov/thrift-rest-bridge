@@ -93,9 +93,8 @@ class BridgeControllerIT {
     @Test
     void "services-operations endpoint should proxy request to thrift"() {
         def restRequest = restRequest()
-        def restResponse = restResponse()
         doReturn(service()).when(thriftRepository).findByName(SERVICE_NAME)
-        doReturn(restResponse).when(bridgeService).proxy(operation(), THRIFT_ENDPOINT, restRequest)
+        doReturn(thriftTestStruct()).when(bridgeService).proxy(operation(), THRIFT_ENDPOINT, restRequest)
 
         def req = post("/services/{service}/operations/{operation}", SERVICE_NAME, OPERATION_NAME)
                 .header('Thrift-Endpoint', THRIFT_ENDPOINT)
@@ -104,7 +103,23 @@ class BridgeControllerIT {
 
         mockMvc.perform(req)
                 .andExpect(status().isOk())
-                .andExpect(content().json(mapper.writeValueAsString(restResponse)))
+                .andExpect(content().json(mapper.writeValueAsString(restTestStruct())))
+    }
+
+    @Test
+    void "services-operations endpoint should interpret null proxy result as empty"() {
+        def restRequest = restRequest()
+        doReturn(service()).when(thriftRepository).findByName(SERVICE_NAME)
+        doReturn(null).when(bridgeService).proxy(operation(), THRIFT_ENDPOINT, restRequest)
+
+        def req = post("/services/{service}/operations/{operation}", SERVICE_NAME, OPERATION_NAME)
+                .header('Thrift-Endpoint', THRIFT_ENDPOINT)
+                .contentType(APPLICATION_JSON_UTF8)
+                .content(mapper.writeValueAsString(restRequest))
+
+        mockMvc.perform(req)
+                .andExpect(status().isOk())
+                .andExpect(content().string(""))
     }
 
     @Test

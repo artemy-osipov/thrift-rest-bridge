@@ -37,7 +37,7 @@ public class BridgeController {
     }
 
     @PostMapping("/services/{serviceName}/operations/{operationName}")
-    public JsonNode proxy(
+    public Object proxy(
             @PathVariable String serviceName,
             @PathVariable String operationName,
             @RequestHeader("Thrift-Endpoint") String thriftEndpoint,
