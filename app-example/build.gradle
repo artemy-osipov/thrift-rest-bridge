@@ -1,0 +1,8 @@
+dependencies {
+    implementation project(':thrift-example')
+    implementation project(':rest-bridge-spring-boot-starter')
+
+    implementation 'org.springframework.boot:spring-boot-starter-web:2.1.6.RELEASE'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:2.1.6.RELEASE'
+}

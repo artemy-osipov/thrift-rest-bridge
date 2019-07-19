@@ -8,8 +8,9 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/example" />
+            <option value="$PROJECT_DIR$/app-example" />
             <option value="$PROJECT_DIR$/jackson-datatype-thrift" />
+            <option value="$PROJECT_DIR$/rest-bridge-spring-boot-starter" />
             <option value="$PROJECT_DIR$/thrift-example" />
           </set>
         </option>

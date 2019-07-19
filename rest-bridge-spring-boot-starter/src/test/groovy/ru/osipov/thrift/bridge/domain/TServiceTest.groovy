@@ -1,6 +1,5 @@
 package ru.osipov.thrift.bridge.domain
 
-
 import org.junit.Test
 import ru.osipov.thrift.bridge.domain.exception.NotFoundException
 import ru.osipov.thrift.bridge.test.TestService
