@@ -25,6 +25,7 @@ dependencies {
     implementation project(':jackson-datatype-thrift')
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
     testImplementation 'org.codehaus.groovy:groovy-all:2.5.7'
     testImplementation project(':thrift-example')
 }
@@ -35,4 +36,18 @@ publishing {
             from components.java
         }
     }
+}
+
+ext {
+    snippetsDir = file('build/generated-snippets')
+}
+
+test {
+    outputs.dir snippetsDir
+}
+
+tasks.register('build-doc-snippets', Copy) {
+    dependsOn test
+    from snippetsDir
+    into 'src/docs/asciidoc/snippets'
 }

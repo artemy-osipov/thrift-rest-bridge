@@ -4,8 +4,14 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs
+import org.springframework.boot.test.autoconfigure.restdocs.RestDocsMockMvcConfigurationCustomizer
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.restdocs.headers.HeaderDocumentation
+import org.springframework.restdocs.mockmvc.MockMvcRestDocumentationConfigurer
+import org.springframework.restdocs.operation.preprocess.Preprocessors
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit4.SpringRunner
 import org.springframework.test.web.servlet.MockMvc
@@ -19,15 +25,35 @@ import static org.mockito.ArgumentMatchers.any
 import static org.mockito.Mockito.doReturn
 import static org.mockito.Mockito.doThrow
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import static ru.osipov.thrift.bridge.TestData.*
 
 @RunWith(SpringRunner)
-@ContextConfiguration(classes = BridgeAutoConfiguration)
+@ContextConfiguration(classes = [BridgeAutoConfiguration, CustomizationConfiguration])
 @WebMvcTest(BridgeController)
+@AutoConfigureRestDocs
 class BridgeControllerIT {
+
+    @TestConfiguration
+    static class CustomizationConfiguration implements RestDocsMockMvcConfigurationCustomizer {
+
+        @Override
+        void customize(MockMvcRestDocumentationConfigurer configurer) {
+            configurer.operationPreprocessors()
+                    .withRequestDefaults(Preprocessors.prettyPrint())
+                    .withResponseDefaults(Preprocessors.prettyPrint())
+        }
+
+    }
 
     @Autowired
     private MockMvc mockMvc
@@ -53,6 +79,12 @@ class BridgeControllerIT {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath('$[0].name', is(service.name)))
                 .andExpect(jsonPath('$[0].operations', is(service.operations.values().name)))
+                .andDo(document("list-services",
+                        responseFields(
+                                fieldWithPath('[].name').description("Service name"),
+                                fieldWithPath('[].operations').description("Available operations")
+                        )
+                ))
     }
 
     @Test
@@ -77,6 +109,15 @@ class BridgeControllerIT {
         mockMvc.perform(req)
                 .andExpect(status().isOk())
                 .andExpect(jsonPath('$.name', is(SERVICE_NAME)))
+                .andDo(document("show-service",
+                        pathParameters(
+                                parameterWithName("service").description("Service name")
+                        ),
+                        responseFields(
+                                fieldWithPath('name').description("Service name"),
+                                fieldWithPath('operations').description("Available operations")
+                        )
+                ))
     }
 
     @Test
@@ -104,6 +145,14 @@ class BridgeControllerIT {
         mockMvc.perform(req)
                 .andExpect(status().isOk())
                 .andExpect(content().json(mapper.writeValueAsString(restTestStruct())))
+                .andDo(document("run-operation",
+                        pathParameters(
+                                parameterWithName("service").description("Service name"),
+                                parameterWithName("operation").description("Operation name")
+                        ),
+                        requestHeaders(
+                                headerWithName("Thrift-Endpoint").description("Thrift endpoint where the request will proxy"))
+                ))
     }
 
     @Test

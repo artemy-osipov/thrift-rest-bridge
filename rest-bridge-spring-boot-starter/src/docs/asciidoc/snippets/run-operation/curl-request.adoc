@@ -1,0 +1,19 @@
+[source,bash]
+----
+$ curl 'http://localhost:8080/services/TestService/operations/testOperation' -i -X POST \
+    -H 'Thrift-Endpoint: http://some.com/tapi' \
+    -H 'Content-Type: application/json;charset=UTF-8' \
+    -d '{
+  "simpleField" : "someSimpleField",
+  "complexField" : {
+    "stringField" : "some",
+    "boolField" : true,
+    "intField" : 42,
+    "enumField" : "ENUM_2",
+    "complexField" : {
+      "f1" : "f1",
+      "f2" : "f2"
+    }
+  }
+}'
+----

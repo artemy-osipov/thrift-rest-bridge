@@ -1,0 +1,30 @@
+= Thrift-REST Bridge
+
+The bridge for accessing thrift services using simple JSON. It allows request thrift services via REST client like Postman / Insomnia / cURL
+
+== Usage
+
+In build.gradle
+[source,groovy]
+----
+repositories {
+  jcenter()
+}
+
+dependencies {
+  // ...
+  implementation 'ru.osipov.thrift:thrift-rest-bridge:0.5.1'
+  implementation 'org.example:thrift-api:0.2.+' // dependency with thrift services/entity
+  // ...
+}
+----
+
+== Configuration properties
+[source,yaml]
+----
+# package that will be scanned for thrift services
+bridge.thrift.scanPackage: org.example.thrift
+----
+
+== REST API Docs
+<<rest-bridge-spring-boot-starter/src/docs/asciidoc/index.adoc#,Docs>>

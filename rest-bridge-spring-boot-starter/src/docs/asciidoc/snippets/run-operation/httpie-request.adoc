@@ -1,0 +1,18 @@
+[source,bash]
+----
+$ echo '{
+  "simpleField" : "someSimpleField",
+  "complexField" : {
+    "stringField" : "some",
+    "boolField" : true,
+    "intField" : 42,
+    "enumField" : "ENUM_2",
+    "complexField" : {
+      "f1" : "f1",
+      "f2" : "f2"
+    }
+  }
+}' | http POST 'http://localhost:8080/services/TestService/operations/testOperation' \
+    'Thrift-Endpoint:http://some.com/tapi' \
+    'Content-Type:application/json;charset=UTF-8'
+----
