@@ -9,10 +9,16 @@ import ru.osipov.thrift.bridge.controllers.ErrorHandler;
 import ru.osipov.thrift.bridge.services.BridgeService;
 import ru.osipov.thrift.bridge.services.TServiceRepository;
 import ru.osipov.thrift.bridge.services.ThriftConverter;
+import ru.osipov.thrift.jackson.ThriftModule;
 
 @Configuration
 @ConditionalOnWebApplication
 public class BridgeMvcConfiguration {
+
+    @Bean
+    public ThriftModule thriftModule() {
+        return new ThriftModule();
+    }
 
     @Bean
     public ErrorHandler errorHandler() {

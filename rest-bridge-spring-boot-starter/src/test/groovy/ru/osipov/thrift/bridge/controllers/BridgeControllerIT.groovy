@@ -9,7 +9,6 @@ import org.springframework.boot.test.autoconfigure.restdocs.RestDocsMockMvcConfi
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.restdocs.headers.HeaderDocumentation
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentationConfigurer
 import org.springframework.restdocs.operation.preprocess.Preprocessors
 import org.springframework.test.context.ContextConfiguration
