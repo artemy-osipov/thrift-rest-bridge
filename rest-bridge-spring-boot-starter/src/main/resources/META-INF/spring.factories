@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-ru.osipov.thrift.bridge.config.BridgeAutoConfiguration
+io.github.artemy.osipov.thrift.bridge.config.BridgeAutoConfiguration

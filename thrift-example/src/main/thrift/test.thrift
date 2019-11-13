@@ -1,4 +1,4 @@
-namespace java ru.osipov.thrift.bridge.test
+namespace java io.github.artemy.osipov.thrift.bridge.test
 
 struct TestStruct {
     1: string stringField

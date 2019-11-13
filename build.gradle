@@ -2,7 +2,7 @@ subprojects {
     apply plugin: 'java-library'
     apply plugin: 'groovy'
 
-    group = 'ru.osipov.thrift'
+    group = 'io.github.artemy.osipov.thrift'
     version = '0.5.1-SNAPSHOT'
 
     sourceCompatibility = JavaVersion.VERSION_11
