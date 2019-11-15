@@ -44,6 +44,7 @@ class TestData {
             boolField = true
             intField = 42
             enumField = TestEnum.ENUM_2
+            binaryField = [1, 2, 3] as byte[]
             complexField = new TestInnerStruct('f1', 'f2')
         }
     }
@@ -58,30 +59,19 @@ class TestData {
     }
 
     static JsonNode restRequest() {
-        def thrift = thriftTestStruct()
         mapper.createObjectNode()
                 .put('simpleField', THRIFT_SIMPLE_FIELD)
-                .set('complexField',
-                        mapper.createObjectNode()
-                                .put('stringField', thrift.stringField)
-                                .put('boolField', thrift.boolField)
-                                .put('intField', thrift.intField)
-                                .put('enumField', thrift.enumField.name())
-                                .set('complexField',
-                                        mapper.createObjectNode()
-                                                .put('f1', thrift.complexField.f1)
-                                                .put('f2', thrift.complexField.f2)
-                                )
-                )
+                .set('complexField', jsonTestStruct())
     }
 
-    static JsonNode restTestStruct() {
+    static JsonNode jsonTestStruct() {
         def thrift = thriftTestStruct()
         mapper.createObjectNode()
                 .put('stringField', thrift.stringField)
                 .put('boolField', thrift.boolField)
                 .put('intField', thrift.intField)
                 .put('enumField', thrift.enumField.name())
+                .put('binaryField', thrift.binaryField)
                 .set('complexField',
                         mapper.createObjectNode()
                                 .put('f1', thrift.complexField.f1)

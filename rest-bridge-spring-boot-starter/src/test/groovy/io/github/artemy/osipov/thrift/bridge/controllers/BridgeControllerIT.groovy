@@ -1,9 +1,11 @@
 package io.github.artemy.osipov.thrift.bridge.controllers
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import io.github.artemy.osipov.thrift.bridge.config.BridgeAutoConfiguration
 import io.github.artemy.osipov.thrift.bridge.domain.exception.NotFoundException
 import io.github.artemy.osipov.thrift.bridge.services.BridgeService
 import io.github.artemy.osipov.thrift.bridge.services.TServiceRepository
+import io.github.artemy.osipov.thrift.bridge.utils.JsonMatcher
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -17,10 +19,10 @@ import org.springframework.restdocs.operation.preprocess.Preprocessors
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit4.SpringRunner
 import org.springframework.test.web.servlet.MockMvc
-import io.github.artemy.osipov.thrift.bridge.config.BridgeAutoConfiguration
 
+import static io.github.artemy.osipov.thrift.bridge.TestData.*
 import static org.hamcrest.Matchers.is
-import static org.mockito.ArgumentMatchers.any
+import static org.mockito.ArgumentMatchers.*
 import static org.mockito.Mockito.doReturn
 import static org.mockito.Mockito.doThrow
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8
@@ -29,13 +31,10 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.requestHe
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields
-import static org.springframework.restdocs.payload.PayloadDocumentation.subsectionWithPath
+import static org.springframework.restdocs.payload.PayloadDocumentation.*
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
-import static io.github.artemy.osipov.thrift.bridge.TestData.*
 
 @RunWith(SpringRunner)
 @ContextConfiguration(classes = [BridgeAutoConfiguration, CustomizationConfiguration])
@@ -135,7 +134,9 @@ class BridgeControllerIT {
     void "services-operations endpoint should proxy request to thrift"() {
         def restRequest = restRequest()
         doReturn(service()).when(thriftRepository).findByName(SERVICE_NAME)
-        doReturn(thriftTestStruct()).when(bridgeService).proxy(operation(), THRIFT_ENDPOINT, restRequest)
+        doReturn(thriftTestStruct())
+                .when(bridgeService)
+                .proxy(eq(operation()), eq(THRIFT_ENDPOINT), argThat(new JsonMatcher(restRequest)))
 
         def req = post("/services/{service}/operations/{operation}", SERVICE_NAME, OPERATION_NAME)
                 .header('Thrift-Endpoint', THRIFT_ENDPOINT)
@@ -144,7 +145,7 @@ class BridgeControllerIT {
 
         mockMvc.perform(req)
                 .andExpect(status().isOk())
-                .andExpect(content().json(mapper.writeValueAsString(restTestStruct())))
+                .andExpect(content().string(mapper.writeValueAsString(jsonTestStruct())))
                 .andDo(document("run-operation",
                         pathParameters(
                                 parameterWithName("service").description("Service name"),

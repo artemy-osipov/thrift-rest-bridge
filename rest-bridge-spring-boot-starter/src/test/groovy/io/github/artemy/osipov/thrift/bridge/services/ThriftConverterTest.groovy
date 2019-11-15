@@ -28,7 +28,8 @@ class ThriftConverterTest {
     void "parseArgs should return array of args"() {
         def res = converter.parseArgs(method, restRequest())
 
-        assert res == [THRIFT_SIMPLE_FIELD, thriftTestStruct()]
+        assert res[0] == THRIFT_SIMPLE_FIELD
+        assert res[1].equals(thriftTestStruct())
     }
 
     @Test

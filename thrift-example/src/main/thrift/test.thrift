@@ -5,7 +5,8 @@ struct TestStruct {
     2: bool boolField
     3: i32 intField
     4: TestEnum enumField
-    5: TestInnerStruct complexField
+    5: binary binaryField
+    6: TestInnerStruct complexField
 }
 
 struct TestInnerStruct {
