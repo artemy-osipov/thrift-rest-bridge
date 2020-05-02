@@ -1,18 +1,15 @@
 package io.github.artemy.osipov.thrift.bridge.services
 
 import io.github.artemy.osipov.thrift.bridge.domain.exception.NotFoundException
-import org.junit.Before
-import org.junit.Test
-import org.junit.runner.RunWith
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.test.context.junit4.SpringRunner
 import io.github.artemy.osipov.thrift.bridge.UseConfigurationProperties
 import io.github.artemy.osipov.thrift.bridge.config.BridgeProperties
 
 import static groovy.test.GroovyAssert.shouldFail
 import static io.github.artemy.osipov.thrift.bridge.TestData.*
 
-@RunWith(SpringRunner)
 @UseConfigurationProperties
 class TServiceRepositoryTest {
 
@@ -21,7 +18,7 @@ class TServiceRepositoryTest {
 
     TServiceRepository repository
 
-    @Before
+    @BeforeEach
     void setup() {
         repository = new TServiceRepository(bridgeProperties)
     }

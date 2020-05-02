@@ -1,8 +1,8 @@
 package io.github.artemy.osipov.thrift.bridge.services
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.junit.platform.commons.util.ReflectionUtils
 import io.github.artemy.osipov.thrift.bridge.test.TestService
 import io.github.artemy.osipov.thrift.bridge.test.TestStruct
@@ -16,7 +16,7 @@ class ThriftConverterTest {
 
     ThriftConverter converter
 
-    @Before
+    @BeforeEach
     void setup() {
         mapper.registerModule(new ThriftModule())
         converter = new ThriftConverter(mapper)
@@ -36,6 +36,6 @@ class ThriftConverterTest {
     void "parseArgs should return null element when json field dont exists"() {
         def res = converter.parseArgs(method, mapper.createObjectNode())
 
-        assert res == [null, null]
+        assert res == new Object[]{null, null}
     }
 }

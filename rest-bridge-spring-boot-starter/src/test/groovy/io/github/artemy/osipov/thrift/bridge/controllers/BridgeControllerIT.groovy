@@ -6,8 +6,7 @@ import io.github.artemy.osipov.thrift.bridge.domain.exception.NotFoundException
 import io.github.artemy.osipov.thrift.bridge.services.BridgeService
 import io.github.artemy.osipov.thrift.bridge.services.TServiceRepository
 import io.github.artemy.osipov.thrift.bridge.utils.JsonMatcher
-import org.junit.Test
-import org.junit.runner.RunWith
+import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs
 import org.springframework.boot.test.autoconfigure.restdocs.RestDocsMockMvcConfigurationCustomizer
@@ -17,7 +16,6 @@ import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentationConfigurer
 import org.springframework.restdocs.operation.preprocess.Preprocessors
 import org.springframework.test.context.ContextConfiguration
-import org.springframework.test.context.junit4.SpringRunner
 import org.springframework.test.web.servlet.MockMvc
 
 import static io.github.artemy.osipov.thrift.bridge.TestData.*
@@ -25,7 +23,7 @@ import static org.hamcrest.Matchers.is
 import static org.mockito.ArgumentMatchers.*
 import static org.mockito.Mockito.doReturn
 import static org.mockito.Mockito.doThrow
-import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8
+import static org.springframework.http.MediaType.APPLICATION_JSON
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
@@ -36,7 +34,6 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 
-@RunWith(SpringRunner)
 @ContextConfiguration(classes = [BridgeAutoConfiguration, CustomizationConfiguration])
 @WebMvcTest(BridgeController)
 @AutoConfigureRestDocs
@@ -72,7 +69,7 @@ class BridgeControllerIT {
         doReturn([service]).when(thriftRepository).list()
 
         def req = get("/services")
-                .contentType(APPLICATION_JSON_UTF8)
+                .contentType(APPLICATION_JSON)
 
         mockMvc.perform(req)
                 .andExpect(status().isOk())
@@ -91,7 +88,7 @@ class BridgeControllerIT {
         doReturn([]).when(thriftRepository).list()
 
         def req = get("/services")
-                .contentType(APPLICATION_JSON_UTF8)
+                .contentType(APPLICATION_JSON)
 
         mockMvc.perform(req)
                 .andExpect(status().isOk())
@@ -103,7 +100,7 @@ class BridgeControllerIT {
         doReturn(service()).when(thriftRepository).findByName(SERVICE_NAME)
 
         def req = get("/services/{service}", SERVICE_NAME)
-                .contentType(APPLICATION_JSON_UTF8)
+                .contentType(APPLICATION_JSON)
 
         mockMvc.perform(req)
                 .andExpect(status().isOk())
@@ -124,7 +121,7 @@ class BridgeControllerIT {
         doThrow(new NotFoundException()).when(thriftRepository).findByName(any())
 
         def req = get("/services/{service}", 'unknown')
-                .contentType(APPLICATION_JSON_UTF8)
+                .contentType(APPLICATION_JSON)
 
         mockMvc.perform(req)
                 .andExpect(status().isNotFound())
@@ -140,7 +137,7 @@ class BridgeControllerIT {
 
         def req = post("/services/{service}/operations/{operation}", SERVICE_NAME, OPERATION_NAME)
                 .header('Thrift-Endpoint', THRIFT_ENDPOINT)
-                .contentType(APPLICATION_JSON_UTF8)
+                .contentType(APPLICATION_JSON)
                 .content(mapper.writeValueAsString(restRequest))
 
         mockMvc.perform(req)
@@ -164,7 +161,7 @@ class BridgeControllerIT {
 
         def req = post("/services/{service}/operations/{operation}", SERVICE_NAME, OPERATION_NAME)
                 .header('Thrift-Endpoint', THRIFT_ENDPOINT)
-                .contentType(APPLICATION_JSON_UTF8)
+                .contentType(APPLICATION_JSON)
                 .content(mapper.writeValueAsString(restRequest))
 
         mockMvc.perform(req)
@@ -175,7 +172,7 @@ class BridgeControllerIT {
     @Test
     void "services-operations endpoint should fail when requested without endpoint"() {
         def req = post("/services/{service}/operations/{operation}", SERVICE_NAME, OPERATION_NAME)
-                .contentType(APPLICATION_JSON_UTF8)
+                .contentType(APPLICATION_JSON)
                 .content(mapper.writeValueAsString(restRequest()))
 
         mockMvc.perform(req)

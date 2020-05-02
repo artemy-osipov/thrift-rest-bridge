@@ -1,9 +1,9 @@
 package io.github.artemy.osipov.thrift.bridge.services
 
 import io.github.artemy.osipov.thrift.bridge.domain.TService
-import org.junit.Before
-import org.junit.Test
 import io.github.artemy.osipov.thrift.bridge.test.TestService
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 import static org.mockito.Mockito.*
 import static io.github.artemy.osipov.thrift.bridge.TestData.*
@@ -19,7 +19,7 @@ class BridgeServiceTest {
         service = thriftService
     }
 
-    @Before
+    @BeforeEach
     void setup() {
         doReturn(thriftClient).when(thriftService).buildThriftClient(THRIFT_ENDPOINT)
         doReturn([THRIFT_SIMPLE_FIELD, thriftTestStruct()] as Object[]).when(thriftConverter).parseArgs(any(), eq(restRequest()))

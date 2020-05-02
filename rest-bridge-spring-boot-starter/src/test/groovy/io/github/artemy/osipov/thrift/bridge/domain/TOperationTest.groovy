@@ -1,9 +1,9 @@
 package io.github.artemy.osipov.thrift.bridge.domain
 
 import io.github.artemy.osipov.thrift.bridge.domain.exception.NotFoundException
-import org.junit.Test
 import io.github.artemy.osipov.thrift.bridge.test.AnotherTestService
 import io.github.artemy.osipov.thrift.bridge.test.TestService
+import org.junit.jupiter.api.Test
 
 import static groovy.test.GroovyAssert.shouldFail
 import static io.github.artemy.osipov.thrift.bridge.TestData.operation
