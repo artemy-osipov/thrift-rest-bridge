@@ -7,6 +7,5 @@ rootProject.name = "thrift-rest-bridge"
 
 include 'thrift-example'
 include 'app-example'
-include 'jackson-datatype-thrift'
 include 'rest-bridge-spring-boot-starter'
 

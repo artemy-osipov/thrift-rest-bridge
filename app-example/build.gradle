@@ -1,13 +1,3 @@
-plugins {
-    id 'io.spring.dependency-management' version '1.0.8.RELEASE'
-}
-
-dependencyManagement {
-    imports {
-        mavenBom 'org.springframework.boot:spring-boot-dependencies:2.1.6.RELEASE'
-    }
-}
-
 dependencies {
     implementation project(':thrift-example')
     implementation project(':rest-bridge-spring-boot-starter')
