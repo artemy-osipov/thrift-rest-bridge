@@ -18,10 +18,10 @@ dependencies {
     implementation 'com.google.code.gson:gson'
     implementation 'io.github.artemy.osipov.thrift:jackson-datatype-thrift:0.1.0'
 
-    testImplementation project(':thrift-example')
+    testImplementation project(':examples:thrift')
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
-    testImplementation 'org.codehaus.groovy:groovy-all:3.0.3'
+    testImplementation 'org.codehaus.groovy:groovy-test:3.0.3'
 }
 
 publishing {
