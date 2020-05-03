@@ -14,4 +14,8 @@ public class BridgeService {
         Object[] args = parser.parse(operation.getArgs(), body);
         return operation.proxy(endpoint, args);
     }
+
+    public String template(TOperation operation, int depth) {
+        return "";
+    }
 }

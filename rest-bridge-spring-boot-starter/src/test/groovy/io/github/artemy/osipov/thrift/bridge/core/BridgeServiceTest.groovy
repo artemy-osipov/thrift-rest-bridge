@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test
 
 import java.lang.reflect.Parameter
 
+import static io.github.artemy.osipov.thrift.bridge.utils.JsonUtils.toJson
 import static org.mockito.Mockito.*
 import static io.github.artemy.osipov.thrift.bridge.TestData.*
 
@@ -23,7 +24,7 @@ class BridgeServiceTest {
                 .when(operation)
                 .proxy(THRIFT_ENDPOINT, args)
 
-        def res = service.proxy(operation, THRIFT_ENDPOINT, rawRestRequest())
+        def res = service.proxy(operation, THRIFT_ENDPOINT, toJson(proxyRequestBody()))
 
         assert res == resp
     }

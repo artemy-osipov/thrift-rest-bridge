@@ -1,11 +1,10 @@
 package io.github.artemy.osipov.thrift.bridge
 
 import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.ObjectMapper
 import groovy.transform.CompileStatic
+import io.github.artemy.osipov.thrift.bridge.controllers.dto.ProxyRequestDTO
 import io.github.artemy.osipov.thrift.bridge.core.TService
 import io.github.artemy.osipov.thrift.bridge.core.TService.TOperation
-import io.github.artemy.osipov.thrift.jackson.ThriftModule
 import org.apache.thrift.TServiceClient
 import io.github.artemy.osipov.thrift.bridge.test.AnotherTestService
 import io.github.artemy.osipov.thrift.bridge.test.ErrorInfo
@@ -16,6 +15,8 @@ import io.github.artemy.osipov.thrift.bridge.test.TestInnerStruct
 import io.github.artemy.osipov.thrift.bridge.test.TestService
 import io.github.artemy.osipov.thrift.bridge.test.TestStruct
 
+import static io.github.artemy.osipov.thrift.bridge.utils.JsonUtils.objectNode
+
 @CompileStatic
 class TestData {
 
@@ -24,10 +25,6 @@ class TestData {
     static String OPERATION_NAME = 'testOperation'
     static String THRIFT_SIMPLE_FIELD = 'someSimpleField'
     static Class<? extends TServiceClient> THRIFT_CLIENT_CLASS = TestService.Client
-
-    private static ObjectMapper mapper = new ObjectMapper().tap {
-        registerModule(new ThriftModule())
-    }
 
     static List<TService> services() {
         [new TService(AnotherTestService.Client), new TService(SubTestService.Client), service()]
@@ -61,30 +58,33 @@ class TestData {
         ])
     }
 
-    static JsonNode restRequest() {
-        mapper.createObjectNode()
+    static ProxyRequestDTO proxyRequest() {
+        new ProxyRequestDTO().tap {
+            endpoint = THRIFT_ENDPOINT
+            body = proxyRequestBody()
+        }
+    }
+
+    static JsonNode proxyRequestBody() {
+        objectNode()
                 .put('simpleField', THRIFT_SIMPLE_FIELD)
                 .set('complexField', jsonTestStruct())
     }
 
-    static String rawRestRequest() {
-        mapper.writeValueAsString(restRequest())
-    }
-
-    static Object[] request() {
-        new Object[] {THRIFT_SIMPLE_FIELD, thriftTestStruct()}
+    static Object[] proxyArgs() {
+        new Object[]{THRIFT_SIMPLE_FIELD, thriftTestStruct()}
     }
 
     static JsonNode jsonTestStruct() {
         def thrift = thriftTestStruct()
-        mapper.createObjectNode()
+        objectNode()
                 .put('stringField', thrift.stringField)
                 .put('boolField', thrift.boolField)
                 .put('intField', thrift.intField)
                 .put('enumField', thrift.enumField.name())
                 .put('binaryField', thrift.binaryField)
                 .set('complexField',
-                        mapper.createObjectNode()
+                        objectNode()
                                 .put('f1', thrift.complexField.f1)
                                 .put('f2', thrift.complexField.f2)
                 )

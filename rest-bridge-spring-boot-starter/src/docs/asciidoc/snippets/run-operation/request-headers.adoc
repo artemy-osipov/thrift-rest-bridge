@@ -1,7 +1,0 @@
-|===
-|Name|Description
-
-|`+Thrift-Endpoint+`
-|Thrift endpoint where the request will proxy
-
-|===

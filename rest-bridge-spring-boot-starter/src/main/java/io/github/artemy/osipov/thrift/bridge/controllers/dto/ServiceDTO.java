@@ -9,4 +9,9 @@ public class ServiceDTO {
 
     private String name;
     private List<OperationDTO> operations;
+
+    @Data
+    public static class OperationDTO {
+        private String name;
+    }
 }

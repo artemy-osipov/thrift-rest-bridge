@@ -1,7 +1,0 @@
-[source,options="nowrap"]
-----
-[ {
-  "name" : "TestService",
-  "operations" : [ "testOperation" ]
-} ]
-----

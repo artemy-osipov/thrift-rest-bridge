@@ -38,7 +38,7 @@ class TOperationTest {
                 .when(thriftClient)
                 .testOperation(THRIFT_SIMPLE_FIELD, thriftTestStruct())
 
-        def res = operation.proxy(THRIFT_ENDPOINT, request())
+        def res = operation.proxy(THRIFT_ENDPOINT, proxyArgs())
 
         assert res == resp
     }
@@ -50,7 +50,7 @@ class TOperationTest {
                 .when(thriftClient)
                 .testOperation(THRIFT_SIMPLE_FIELD, thriftTestStruct())
 
-        def res = operation.proxy(THRIFT_ENDPOINT, request())
+        def res = operation.proxy(THRIFT_ENDPOINT, proxyArgs())
 
         assert res == resp
     }
