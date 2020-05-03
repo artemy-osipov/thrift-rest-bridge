@@ -5,7 +5,6 @@ import io.github.artemy.osipov.thrift.bridge.config.BridgeAutoConfiguration
 import io.github.artemy.osipov.thrift.bridge.core.exception.NotFoundException
 import io.github.artemy.osipov.thrift.bridge.core.BridgeService
 import io.github.artemy.osipov.thrift.bridge.core.TServiceRepository
-import io.github.artemy.osipov.thrift.bridge.utils.JsonMatcher
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs
@@ -66,7 +65,9 @@ class BridgeControllerIT {
     @Test
     void "services endpoint should return list of services"() {
         def service = service()
-        doReturn([service]).when(thriftRepository).list()
+        doReturn([service])
+                .when(thriftRepository)
+                .list()
 
         def req = get("/services")
                 .contentType(APPLICATION_JSON)
@@ -85,7 +86,9 @@ class BridgeControllerIT {
 
     @Test
     void "services endpoint should return empty list when no services"() {
-        doReturn([]).when(thriftRepository).list()
+        doReturn([])
+                .when(thriftRepository)
+                .list()
 
         def req = get("/services")
                 .contentType(APPLICATION_JSON)
@@ -97,7 +100,9 @@ class BridgeControllerIT {
 
     @Test
     void "services endpoint should return service requested by name"() {
-        doReturn(service()).when(thriftRepository).findByName(SERVICE_NAME)
+        doReturn(service())
+                .when(thriftRepository)
+                .findByName(SERVICE_NAME)
 
         def req = get("/services/{service}", SERVICE_NAME)
                 .contentType(APPLICATION_JSON)
@@ -118,7 +123,9 @@ class BridgeControllerIT {
 
     @Test
     void "services endpoint should throw fault when service requested by unknown name"() {
-        doThrow(new NotFoundException()).when(thriftRepository).findByName(any())
+        doThrow(new NotFoundException())
+                .when(thriftRepository)
+                .findByName(any())
 
         def req = get("/services/{service}", 'unknown')
                 .contentType(APPLICATION_JSON)
@@ -130,10 +137,12 @@ class BridgeControllerIT {
     @Test
     void "services-operations endpoint should proxy request to thrift"() {
         def restRequest = restRequest()
-        doReturn(service()).when(thriftRepository).findByName(SERVICE_NAME)
+        doReturn(service())
+                .when(thriftRepository)
+                .findByName(SERVICE_NAME)
         doReturn(thriftTestStruct())
                 .when(bridgeService)
-                .proxy(eq(operation()), eq(THRIFT_ENDPOINT), argThat(new JsonMatcher(restRequest)))
+                .proxy(operation(), THRIFT_ENDPOINT, rawRestRequest())
 
         def req = post("/services/{service}/operations/{operation}", SERVICE_NAME, OPERATION_NAME)
                 .header('Thrift-Endpoint', THRIFT_ENDPOINT)
@@ -156,8 +165,12 @@ class BridgeControllerIT {
     @Test
     void "services-operations endpoint should interpret null proxy result as empty"() {
         def restRequest = restRequest()
-        doReturn(service()).when(thriftRepository).findByName(SERVICE_NAME)
-        doReturn(null).when(bridgeService).proxy(operation(), THRIFT_ENDPOINT, restRequest)
+        doReturn(service())
+                .when(thriftRepository)
+                .findByName(SERVICE_NAME)
+        doReturn(null)
+                .when(bridgeService)
+                .proxy(operation(), THRIFT_ENDPOINT, rawRestRequest())
 
         def req = post("/services/{service}/operations/{operation}", SERVICE_NAME, OPERATION_NAME)
                 .header('Thrift-Endpoint', THRIFT_ENDPOINT)

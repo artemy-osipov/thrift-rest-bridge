@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import groovy.transform.CompileStatic
 import io.github.artemy.osipov.thrift.bridge.core.TService
 import io.github.artemy.osipov.thrift.bridge.core.TService.TOperation
+import io.github.artemy.osipov.thrift.jackson.ThriftModule
 import org.apache.thrift.TServiceClient
 import io.github.artemy.osipov.thrift.bridge.test.AnotherTestService
 import io.github.artemy.osipov.thrift.bridge.test.ErrorInfo
@@ -24,7 +25,9 @@ class TestData {
     static String THRIFT_SIMPLE_FIELD = 'someSimpleField'
     static Class<? extends TServiceClient> THRIFT_CLIENT_CLASS = TestService.Client
 
-    private static ObjectMapper mapper = new ObjectMapper()
+    private static ObjectMapper mapper = new ObjectMapper().tap {
+        registerModule(new ThriftModule())
+    }
 
     static List<TService> services() {
         [new TService(AnotherTestService.Client), new TService(SubTestService.Client), service()]
@@ -62,6 +65,14 @@ class TestData {
         mapper.createObjectNode()
                 .put('simpleField', THRIFT_SIMPLE_FIELD)
                 .set('complexField', jsonTestStruct())
+    }
+
+    static String rawRestRequest() {
+        mapper.writeValueAsString(restRequest())
+    }
+
+    static Object[] request() {
+        new Object[] {THRIFT_SIMPLE_FIELD, thriftTestStruct()}
     }
 
     static JsonNode jsonTestStruct() {

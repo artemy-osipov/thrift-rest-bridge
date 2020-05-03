@@ -1,12 +1,14 @@
 package io.github.artemy.osipov.thrift.bridge.controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.artemy.osipov.thrift.bridge.controllers.dto.ServiceDTO;
 import io.github.artemy.osipov.thrift.bridge.core.BridgeService;
 import io.github.artemy.osipov.thrift.bridge.core.TService;
 import io.github.artemy.osipov.thrift.bridge.core.TService.TOperation;
 import io.github.artemy.osipov.thrift.bridge.core.TServiceRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.mapstruct.factory.Mappers;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,6 +27,7 @@ public class BridgeController {
     private final ModelMapper modelMapper = Mappers.getMapper(ModelMapper.class);
     private final TServiceRepository serviceRepository;
     private final BridgeService bridgeService;
+    private final ObjectMapper objectMapper;
 
     @GetMapping("/services")
     public Collection<ServiceDTO> services() {
@@ -41,6 +44,7 @@ public class BridgeController {
         );
     }
 
+    @SneakyThrows
     @PostMapping("/services/{serviceName}/operations/{operationName}")
     public Object proxy(
             @PathVariable String serviceName,
@@ -50,6 +54,6 @@ public class BridgeController {
         TService service = serviceRepository.findByName(serviceName);
         TOperation operation = service.operation(operationName);
 
-        return bridgeService.proxy(operation, thriftEndpoint, body);
+        return bridgeService.proxy(operation, thriftEndpoint, objectMapper.writeValueAsString(body));
     }
 }

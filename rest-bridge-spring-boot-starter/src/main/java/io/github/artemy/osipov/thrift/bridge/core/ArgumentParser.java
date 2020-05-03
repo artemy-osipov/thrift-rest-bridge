@@ -1,41 +1,32 @@
 package io.github.artemy.osipov.thrift.bridge.core;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
-import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.springframework.stereotype.Component;
 
-import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.Base64;
 
 @Component
-@RequiredArgsConstructor
-public class ThriftConverter {
+public class ArgumentParser {
 
-    private final ObjectMapper mapper;
     private final Gson gson = new GsonBuilder()
             .registerTypeAdapter(ByteBuffer.class, new ByteBufferDeserializer())
             .create();
 
-    public Object[] parseArgs(Method method, JsonNode request) {
-        return Arrays.stream(method.getParameters())
-                .map(p -> parse(request.get(p.getName()), p.getType()))
+    public Object[] parse(Parameter[] types, String body) {
+        JsonObject jsonObject = JsonParser.parseString(body).getAsJsonObject();
+        return Arrays.stream(types)
+                .map(p -> gson.fromJson(jsonObject.get(p.getName()), p.getType()))
                 .toArray(Object[]::new);
-    }
-
-    @SneakyThrows
-    private <T> T parse(JsonNode node, Class<T> clazz) {
-        String json = mapper.writeValueAsString(node);
-        return gson.fromJson(json, clazz);
     }
 
     static class ByteBufferDeserializer implements JsonDeserializer<ByteBuffer> {

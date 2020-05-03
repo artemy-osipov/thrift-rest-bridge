@@ -19,21 +19,21 @@ class TServiceTest {
     }
 
     @Test
-    void "getOperation should return by name"() {
+    void "should return operation by name"() {
         def res = service.operation(OPERATION_NAME)
 
         assert res == operation()
     }
 
     @Test
-    void "getOperation should fail when requested by unknown name"() {
+    void "should fail return operation when requested by unknown name"() {
         shouldFail(NotFoundException) {
             service.operation('unknown')
         }
     }
 
     @Test
-    void "buildThriftClient should build client"() {
+    void "should build thrift client"() {
         def res = service.buildThriftClient(THRIFT_ENDPOINT)
 
         assert res instanceof TestService.Iface

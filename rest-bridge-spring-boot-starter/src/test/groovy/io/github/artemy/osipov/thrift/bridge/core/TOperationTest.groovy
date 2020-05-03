@@ -1,28 +1,57 @@
 package io.github.artemy.osipov.thrift.bridge.core
 
-import io.github.artemy.osipov.thrift.bridge.core.exception.NotFoundException
-import io.github.artemy.osipov.thrift.bridge.test.AnotherTestService
 import io.github.artemy.osipov.thrift.bridge.test.TestService
+import io.github.artemy.osipov.thrift.bridge.test.TestStruct
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-import static groovy.test.GroovyAssert.shouldFail
-import static io.github.artemy.osipov.thrift.bridge.TestData.operation
+import static io.github.artemy.osipov.thrift.bridge.TestData.*
+import static org.mockito.Mockito.*
 
 class TOperationTest {
 
-    def operation = operation()
+    def thriftClient = mock(TestService.Client)
+    def thriftClientFactory = mock(ThriftClientFactory)
+    def operation = new TService(THRIFT_CLIENT_CLASS, thriftClientFactory).operation(OPERATION_NAME)
 
-    @Test
-    void "findClientMethod should filter method by name"() {
-        def res = operation.buildClientMethod(TestService.Client)
-
-        assert res.name == operation.name
+    @BeforeEach
+    void setup() {
+        doReturn(thriftClient)
+                .when(thriftClientFactory)
+                .build(THRIFT_CLIENT_CLASS, THRIFT_ENDPOINT)
     }
 
     @Test
-    void "findClientMethod should fail when requested by unknown name"() {
-        shouldFail(NotFoundException) {
-            operation.buildClientMethod(AnotherTestService.Client)
-        }
+    void "should return args"() {
+        def res = operation.getArgs()
+
+        assert res[0].name == 'simpleField'
+        assert res[0].type == String
+        assert res[1].name == 'complexField'
+        assert res[1].type == TestStruct
+    }
+
+    @Test
+    void "should proxy request to thrift"() {
+        def resp = [thriftTestStruct()]
+        doReturn(resp)
+                .when(thriftClient)
+                .testOperation(THRIFT_SIMPLE_FIELD, thriftTestStruct())
+
+        def res = operation.proxy(THRIFT_ENDPOINT, request())
+
+        assert res == resp
+    }
+
+    @Test
+    void "should proxy exception from thrift"() {
+        def resp = thriftException()
+        doThrow(resp)
+                .when(thriftClient)
+                .testOperation(THRIFT_SIMPLE_FIELD, thriftTestStruct())
+
+        def res = operation.proxy(THRIFT_ENDPOINT, request())
+
+        assert res == resp
     }
 }
