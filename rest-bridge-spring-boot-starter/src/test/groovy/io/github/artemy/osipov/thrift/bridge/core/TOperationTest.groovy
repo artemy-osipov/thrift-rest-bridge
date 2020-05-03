@@ -1,6 +1,6 @@
-package io.github.artemy.osipov.thrift.bridge.domain
+package io.github.artemy.osipov.thrift.bridge.core
 
-import io.github.artemy.osipov.thrift.bridge.domain.exception.NotFoundException
+import io.github.artemy.osipov.thrift.bridge.core.exception.NotFoundException
 import io.github.artemy.osipov.thrift.bridge.test.AnotherTestService
 import io.github.artemy.osipov.thrift.bridge.test.TestService
 import org.junit.jupiter.api.Test

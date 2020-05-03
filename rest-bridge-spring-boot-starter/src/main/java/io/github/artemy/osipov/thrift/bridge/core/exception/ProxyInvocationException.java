@@ -1,4 +1,4 @@
-package io.github.artemy.osipov.thrift.bridge.domain.exception;
+package io.github.artemy.osipov.thrift.bridge.core.exception;
 
 public class ProxyInvocationException extends RuntimeException {
 

@@ -1,4 +1,4 @@
-package io.github.artemy.osipov.thrift.bridge.services
+package io.github.artemy.osipov.thrift.bridge.core
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.junit.jupiter.api.BeforeEach

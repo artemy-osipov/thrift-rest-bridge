@@ -2,9 +2,9 @@ package io.github.artemy.osipov.thrift.bridge.controllers
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.github.artemy.osipov.thrift.bridge.config.BridgeAutoConfiguration
-import io.github.artemy.osipov.thrift.bridge.domain.exception.NotFoundException
-import io.github.artemy.osipov.thrift.bridge.services.BridgeService
-import io.github.artemy.osipov.thrift.bridge.services.TServiceRepository
+import io.github.artemy.osipov.thrift.bridge.core.exception.NotFoundException
+import io.github.artemy.osipov.thrift.bridge.core.BridgeService
+import io.github.artemy.osipov.thrift.bridge.core.TServiceRepository
 import io.github.artemy.osipov.thrift.bridge.utils.JsonMatcher
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired

@@ -1,13 +1,16 @@
-package io.github.artemy.osipov.thrift.bridge.services;
+package io.github.artemy.osipov.thrift.bridge.core;
 
-import io.github.artemy.osipov.thrift.bridge.domain.exception.NotFoundException;
+import io.github.artemy.osipov.thrift.bridge.core.exception.NotFoundException;
 import org.apache.thrift.TServiceClient;
 import org.reflections.Reflections;
 import org.springframework.stereotype.Repository;
 import io.github.artemy.osipov.thrift.bridge.config.BridgeProperties;
-import io.github.artemy.osipov.thrift.bridge.domain.TService;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -20,7 +23,7 @@ public class TServiceRepository {
         serviceMap = new Reflections(properties.getScanPackage())
                 .getSubTypesOf(TServiceClient.class)
                 .stream()
-                .map(TService::build)
+                .map(TService::new)
                 .collect(Collectors.toMap(TService::getName, Function.identity()));
     }
 

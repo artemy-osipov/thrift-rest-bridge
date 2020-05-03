@@ -1,6 +1,6 @@
-package io.github.artemy.osipov.thrift.bridge.domain
+package io.github.artemy.osipov.thrift.bridge.core
 
-import io.github.artemy.osipov.thrift.bridge.domain.exception.NotFoundException
+import io.github.artemy.osipov.thrift.bridge.core.exception.NotFoundException
 import io.github.artemy.osipov.thrift.bridge.test.TestService
 import org.junit.jupiter.api.Test
 
@@ -9,18 +9,18 @@ import static io.github.artemy.osipov.thrift.bridge.TestData.*
 
 class TServiceTest {
 
-    def service = new TService(SERVICE_NAME, THRIFT_CLIENT_CLASS, [(OPERATION_NAME): new TOperation(OPERATION_NAME)])
+    def service = new TService(THRIFT_CLIENT_CLASS)
 
     @Test
-    void "build should construct TService"() {
-        def res = TService.build(THRIFT_CLIENT_CLASS)
-
-        assert res == service
+    void "should construct TService"() {
+        assert service.name == SERVICE_NAME
+        assert service.thriftServiceClass == THRIFT_CLIENT_CLASS
+        assert service.operations == [(OPERATION_NAME): operation()]
     }
 
     @Test
     void "getOperation should return by name"() {
-        def res = service.getOperation(OPERATION_NAME)
+        def res = service.operation(OPERATION_NAME)
 
         assert res == operation()
     }
@@ -28,7 +28,7 @@ class TServiceTest {
     @Test
     void "getOperation should fail when requested by unknown name"() {
         shouldFail(NotFoundException) {
-            service.getOperation('unknown')
+            service.operation('unknown')
         }
     }
 

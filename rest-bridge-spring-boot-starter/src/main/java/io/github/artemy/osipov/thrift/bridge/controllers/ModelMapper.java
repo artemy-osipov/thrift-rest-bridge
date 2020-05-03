@@ -2,8 +2,8 @@ package io.github.artemy.osipov.thrift.bridge.controllers;
 
 import io.github.artemy.osipov.thrift.bridge.controllers.dto.OperationDTO;
 import io.github.artemy.osipov.thrift.bridge.controllers.dto.ServiceDTO;
-import io.github.artemy.osipov.thrift.bridge.domain.TOperation;
-import io.github.artemy.osipov.thrift.bridge.domain.TService;
+import io.github.artemy.osipov.thrift.bridge.core.TService;
+import io.github.artemy.osipov.thrift.bridge.core.TService.TOperation;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
@@ -27,10 +27,11 @@ public interface ModelMapper {
                 .setName(operation.getName())
                 .setUri(
                         MvcUriComponentsBuilder.fromMethodCall(on(BridgeController.class)
-                                .getExample(
+                                .proxy(
                                         operation.getService().getName(),
                                         operation.getName(),
-                                        1))
+                                        null,
+                                        null))
                                 .build().toUriString()
                 );
     }

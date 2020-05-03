@@ -1,14 +1,19 @@
 package io.github.artemy.osipov.thrift.bridge.controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import io.github.artemy.osipov.thrift.bridge.controllers.dto.ServiceDTO;
+import io.github.artemy.osipov.thrift.bridge.core.BridgeService;
+import io.github.artemy.osipov.thrift.bridge.core.TService;
+import io.github.artemy.osipov.thrift.bridge.core.TService.TOperation;
+import io.github.artemy.osipov.thrift.bridge.core.TServiceRepository;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.factory.Mappers;
-import org.springframework.web.bind.annotation.*;
-import io.github.artemy.osipov.thrift.bridge.controllers.dto.ServiceDTO;
-import io.github.artemy.osipov.thrift.bridge.domain.TOperation;
-import io.github.artemy.osipov.thrift.bridge.domain.TService;
-import io.github.artemy.osipov.thrift.bridge.services.BridgeService;
-import io.github.artemy.osipov.thrift.bridge.services.TServiceRepository;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -43,19 +48,8 @@ public class BridgeController {
             @RequestHeader("Thrift-Endpoint") String thriftEndpoint,
             @RequestBody JsonNode body) {
         TService service = serviceRepository.findByName(serviceName);
-        TOperation operation = service.getOperation(operationName);
+        TOperation operation = service.operation(operationName);
 
         return bridgeService.proxy(operation, thriftEndpoint, body);
-    }
-
-    @GetMapping("/services/{serviceName}/operations/{operationName}")
-    public Object getExample(
-            @PathVariable String serviceName,
-            @PathVariable String operationName,
-            @RequestParam(name = "depth", defaultValue = "3") int depth) {
-        TService service = serviceRepository.findByName(serviceName);
-        TOperation operation = service.getOperation(operationName);
-
-        return bridgeService.example(operation, depth);
     }
 }

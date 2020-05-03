@@ -3,8 +3,8 @@ package io.github.artemy.osipov.thrift.bridge
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import groovy.transform.CompileStatic
-import io.github.artemy.osipov.thrift.bridge.domain.TOperation
-import io.github.artemy.osipov.thrift.bridge.domain.TService
+import io.github.artemy.osipov.thrift.bridge.core.TService
+import io.github.artemy.osipov.thrift.bridge.core.TService.TOperation
 import org.apache.thrift.TServiceClient
 import io.github.artemy.osipov.thrift.bridge.test.AnotherTestService
 import io.github.artemy.osipov.thrift.bridge.test.ErrorInfo
@@ -27,15 +27,15 @@ class TestData {
     private static ObjectMapper mapper = new ObjectMapper()
 
     static List<TService> services() {
-        [TService.build(AnotherTestService.Client), TService.build(SubTestService.Client), service()]
+        [new TService(AnotherTestService.Client), new TService(SubTestService.Client), service()]
     }
 
     static TService service() {
-        TService.build(THRIFT_CLIENT_CLASS)
+        new TService(THRIFT_CLIENT_CLASS)
     }
 
     static TOperation operation() {
-        service().getOperation(OPERATION_NAME)
+        service().operation(OPERATION_NAME)
     }
 
     static TestStruct thriftTestStruct() {

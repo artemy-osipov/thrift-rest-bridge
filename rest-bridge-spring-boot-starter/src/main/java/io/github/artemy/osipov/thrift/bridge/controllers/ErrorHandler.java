@@ -1,6 +1,6 @@
 package io.github.artemy.osipov.thrift.bridge.controllers;
 
-import io.github.artemy.osipov.thrift.bridge.domain.exception.NotFoundException;
+import io.github.artemy.osipov.thrift.bridge.core.exception.NotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
