@@ -22,9 +22,9 @@ public class ThriftConverter {
             .registerTypeAdapter(ByteBuffer.class, new ByteBufferDeserializer())
             .create();
 
-    public Object[] parseArgs(Method method, JsonNode req) {
+    public Object[] parseArgs(Method method, JsonNode request) {
         return Arrays.stream(method.getParameters())
-                .map(p -> parse(req.get(p.getName()), p.getType()))
+                .map(p -> parse(request.get(p.getName()), p.getType()))
                 .toArray(Object[]::new);
     }
 
