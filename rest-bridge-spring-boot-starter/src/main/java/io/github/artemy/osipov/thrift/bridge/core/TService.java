@@ -11,7 +11,6 @@ import org.apache.thrift.TServiceClient;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Function;
@@ -48,6 +47,10 @@ public class TService {
                 .collect(Collectors.toMap(TOperation::getName, Function.identity()));
     }
 
+    public String getId() {
+        return thriftServiceClass.getCanonicalName();
+    }
+
     public TOperation operation(String operationName) {
         if (operations.containsKey(operationName)) {
             return operations.get(operationName);
@@ -69,12 +72,8 @@ public class TService {
         private final String name;
         private final Method method;
 
-        public TService getService() {
-            return TService.this;
-        }
-
-        public Parameter[] getArgs() {
-            return method.getParameters();
+        public TArguments getArguments() {
+            return new TArguments(method.getParameters());
         }
 
         public Object proxy(String endpoint, Object[] args) {

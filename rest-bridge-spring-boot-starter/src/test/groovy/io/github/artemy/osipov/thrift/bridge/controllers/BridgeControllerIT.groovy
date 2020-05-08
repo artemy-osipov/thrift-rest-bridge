@@ -1,9 +1,10 @@
 package io.github.artemy.osipov.thrift.bridge.controllers
 
 import io.github.artemy.osipov.thrift.bridge.config.BridgeAutoConfiguration
-import io.github.artemy.osipov.thrift.bridge.core.BridgeService
+import io.github.artemy.osipov.thrift.bridge.core.BridgeFacade
 import io.github.artemy.osipov.thrift.bridge.core.TServiceRepository
 import io.github.artemy.osipov.thrift.bridge.core.exception.NotFoundException
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -37,7 +38,7 @@ class BridgeControllerIT {
     TServiceRepository thriftRepository
 
     @MockBean
-    BridgeService bridgeService
+    BridgeFacade bridgeService
 
     def jsonUtf8Processor = new RequestPostProcessor() {
 
@@ -48,6 +49,13 @@ class BridgeControllerIT {
 
             return request
         }
+    }
+
+    @BeforeEach
+    void init() {
+        doReturn(service())
+                .when(thriftRepository)
+                .findById(SERVICE_ID)
     }
 
     @Test
@@ -62,6 +70,7 @@ class BridgeControllerIT {
 
         mockMvc.perform(req)
                 .andExpect(status().isOk())
+                .andExpect(jsonPath('$[0].id', is(service.id)))
                 .andExpect(jsonPath('$[0].name', is(service.name)))
                 .andExpect(jsonPath('$[0].operations[*].name', is(service.operations.values().name)))
     }
@@ -81,16 +90,13 @@ class BridgeControllerIT {
     }
 
     @Test
-    void "services endpoint should return service requested by name"() {
-        doReturn(service())
-                .when(thriftRepository)
-                .findByName(SERVICE_NAME)
-
-        def req = get("/services/{service}", SERVICE_NAME)
+    void "services endpoint should return service requested by id"() {
+        def req = get("/services/{service}", SERVICE_ID)
                 .with(jsonUtf8Processor)
 
         mockMvc.perform(req)
                 .andExpect(status().isOk())
+                .andExpect(jsonPath('$.id', is(SERVICE_ID)))
                 .andExpect(jsonPath('$.name', is(SERVICE_NAME)))
     }
 
@@ -98,7 +104,7 @@ class BridgeControllerIT {
     void "services endpoint should throw fault when service requested by unknown name"() {
         doThrow(new NotFoundException())
                 .when(thriftRepository)
-                .findByName(any())
+                .findById(any())
 
         def req = get("/services/{service}", 'unknown')
                 .with(jsonUtf8Processor)
@@ -109,32 +115,26 @@ class BridgeControllerIT {
 
     @Test
     void "services-operations endpoint should proxy request to thrift"() {
-        doReturn(service())
-                .when(thriftRepository)
-                .findByName(SERVICE_NAME)
         doReturn(thriftTestStruct())
                 .when(bridgeService)
                 .proxy(operation(), THRIFT_ENDPOINT, toJson(proxyRequestBody()))
 
-        def req = post("/services/{service}/operations/{operation}", SERVICE_NAME, OPERATION_NAME)
+        def req = post("/services/{service}/operations/{operation}", SERVICE_ID, OPERATION_NAME)
                 .with(jsonUtf8Processor)
                 .content(toJson(proxyRequest()))
 
         mockMvc.perform(req)
                 .andExpect(status().isOk())
-                .andExpect(content().string(toJson(jsonTestStruct())))
+                .andExpect(content().json(toJson(jsonTestStruct())))
     }
 
     @Test
     void "services-operations endpoint should interpret null proxy result as empty"() {
-        doReturn(service())
-                .when(thriftRepository)
-                .findByName(SERVICE_NAME)
         doReturn(null)
                 .when(bridgeService)
                 .proxy(operation(), THRIFT_ENDPOINT, toJson(proxyRequestBody()))
 
-        def req = post("/services/{service}/operations/{operation}", SERVICE_NAME, OPERATION_NAME)
+        def req = post("/services/{service}/operations/{operation}", SERVICE_ID, OPERATION_NAME)
                 .with(jsonUtf8Processor)
                 .content(toJson(proxyRequest()))
 
@@ -148,11 +148,27 @@ class BridgeControllerIT {
         def proxyRequest = proxyRequest().tap {
             endpoint = null
         }
-        def req = post("/services/{service}/operations/{operation}", SERVICE_NAME, OPERATION_NAME)
+        def req = post("/services/{service}/operations/{operation}", SERVICE_ID, OPERATION_NAME)
                 .with(jsonUtf8Processor)
                 .content(toJson(proxyRequest))
 
         mockMvc.perform(req)
                 .andExpect(status().isBadRequest())
+    }
+
+    @Test
+    void "services-operations-template endpoint should build template"() {
+        int depth = 10
+        doReturn(templateSpec())
+                .when(bridgeService)
+                .template(operation(), depth)
+
+        def req = get("/services/{service}/operations/{operation}/template", SERVICE_ID, OPERATION_NAME)
+                .with(jsonUtf8Processor)
+                .param("depth", "$depth")
+
+        mockMvc.perform(req)
+                .andExpect(status().isOk())
+                .andExpect(content().json(templateSpec()))
     }
 }

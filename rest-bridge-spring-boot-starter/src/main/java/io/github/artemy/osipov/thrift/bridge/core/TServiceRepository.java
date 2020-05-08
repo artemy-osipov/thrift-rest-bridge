@@ -24,7 +24,7 @@ public class TServiceRepository {
                 .getSubTypesOf(TServiceClient.class)
                 .stream()
                 .map(TService::new)
-                .collect(Collectors.toMap(TService::getName, Function.identity()));
+                .collect(Collectors.toMap(TService::getId, Function.identity()));
     }
 
     public Collection<TService> list() {
@@ -34,11 +34,11 @@ public class TServiceRepository {
         return services;
     }
 
-    public TService findByName(String name) {
-        if (serviceMap.containsKey(name)) {
-            return serviceMap.get(name);
+    public TService findById(String id) {
+        if (serviceMap.containsKey(id)) {
+            return serviceMap.get(id);
         }
 
-        throw new NotFoundException(String.format("Service %s not found", name));
+        throw new NotFoundException(String.format("Service %s not found", id));
     }
 }

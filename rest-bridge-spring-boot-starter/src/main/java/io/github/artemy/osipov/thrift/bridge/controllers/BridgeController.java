@@ -3,7 +3,7 @@ package io.github.artemy.osipov.thrift.bridge.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.artemy.osipov.thrift.bridge.controllers.dto.ProxyRequestDTO;
 import io.github.artemy.osipov.thrift.bridge.controllers.dto.ServiceDTO;
-import io.github.artemy.osipov.thrift.bridge.core.BridgeService;
+import io.github.artemy.osipov.thrift.bridge.core.BridgeFacade;
 import io.github.artemy.osipov.thrift.bridge.core.TService.TOperation;
 import io.github.artemy.osipov.thrift.bridge.core.TServiceRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ public class BridgeController {
 
     private final ModelMapper modelMapper = Mappers.getMapper(ModelMapper.class);
     private final TServiceRepository serviceRepository;
-    private final BridgeService bridgeService;
+    private final BridgeFacade bridgeFacade;
     private final ObjectMapper objectMapper;
 
     @GetMapping("/services")
@@ -38,33 +38,33 @@ public class BridgeController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/services/{serviceName}")
-    public ServiceDTO findService(@PathVariable String serviceName) {
+    @GetMapping("/services/{serviceId}")
+    public ServiceDTO findService(@PathVariable String serviceId) {
         return modelMapper.map(
-                serviceRepository.findByName(serviceName)
+                serviceRepository.findById(serviceId)
         );
     }
 
     @SneakyThrows
-    @PostMapping("/services/{serviceName}/operations/{operationName}")
+    @PostMapping("/services/{serviceId}/operations/{operationName}")
     public Object proxy(
-            @PathVariable String serviceName,
+            @PathVariable String serviceId,
             @PathVariable String operationName,
             @Valid @RequestBody ProxyRequestDTO request) {
-        TOperation operation = serviceRepository.findByName(serviceName)
+        TOperation operation = serviceRepository.findById(serviceId)
                 .operation(operationName);
 
-        return bridgeService.proxy(operation, request.getEndpoint(), objectMapper.writeValueAsString(request.getBody()));
+        return bridgeFacade.proxy(operation, request.getEndpoint(), objectMapper.writeValueAsString(request.getBody()));
     }
 
-    @GetMapping("/services/{serviceName}/operations/{operationName}/template")
+    @GetMapping("/services/{serviceId}/operations/{operationName}/template")
     public String getTemplate(
-            @PathVariable String serviceName,
+            @PathVariable String serviceId,
             @PathVariable String operationName,
             @Valid @Positive @RequestParam(defaultValue = "3") int depth) {
-        TOperation operation = serviceRepository.findByName(serviceName)
+        TOperation operation = serviceRepository.findById(serviceId)
                 .operation(operationName);
 
-        return bridgeService.template(operation, depth);
+        return bridgeFacade.template(operation, depth);
     }
 }

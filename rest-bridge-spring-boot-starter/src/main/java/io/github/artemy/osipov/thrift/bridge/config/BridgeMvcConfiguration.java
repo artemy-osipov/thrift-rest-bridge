@@ -3,9 +3,8 @@ package io.github.artemy.osipov.thrift.bridge.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.artemy.osipov.thrift.bridge.controllers.BridgeController;
 import io.github.artemy.osipov.thrift.bridge.controllers.ErrorHandler;
-import io.github.artemy.osipov.thrift.bridge.core.BridgeService;
+import io.github.artemy.osipov.thrift.bridge.core.BridgeFacade;
 import io.github.artemy.osipov.thrift.bridge.core.TServiceRepository;
-import io.github.artemy.osipov.thrift.bridge.core.ArgumentParser;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,13 +25,8 @@ public class BridgeMvcConfiguration {
     }
 
     @Bean
-    public ArgumentParser argumentParser() {
-        return new ArgumentParser();
-    }
-
-    @Bean
-    public BridgeService bridgeService(ArgumentParser thriftConverter) {
-        return new BridgeService(thriftConverter);
+    public BridgeFacade bridgeFacade() {
+        return new BridgeFacade();
     }
 
     @Bean
@@ -41,8 +35,8 @@ public class BridgeMvcConfiguration {
     }
 
     @Bean
-    public BridgeController bridgeController(TServiceRepository repository, BridgeService bridgeService, ObjectMapper objectMapper) {
-        return new BridgeController(repository, bridgeService, objectMapper);
+    public BridgeController bridgeController(TServiceRepository repository, BridgeFacade bridgeFacade, ObjectMapper objectMapper) {
+        return new BridgeController(repository, bridgeFacade, objectMapper);
     }
 }
 

@@ -8,21 +8,21 @@ import static io.github.artemy.osipov.thrift.bridge.utils.JsonUtils.toJson
 import static org.mockito.Mockito.*
 import static io.github.artemy.osipov.thrift.bridge.TestData.*
 
-class BridgeServiceTest {
+class BridgeFacadeTest {
 
-    def service = new BridgeService(new ArgumentParser())
+    def service = new BridgeFacade()
     def operation = mock(TService.TOperation)
 
     @Test
     void "should delegate proxy to operation"() {
-        Parameter[] args = []
-        doReturn(args)
+        def arguments = new TArguments(new Parameter[0])
+        doReturn(arguments)
                 .when(operation)
-                .getArgs()
+                .getArguments()
         def resp = thriftTestStruct()
         doReturn(resp)
                 .when(operation)
-                .proxy(THRIFT_ENDPOINT, args)
+                .proxy(eq(THRIFT_ENDPOINT), any())
 
         def res = service.proxy(operation, THRIFT_ENDPOINT, toJson(proxyRequestBody()))
 

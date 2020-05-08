@@ -31,16 +31,16 @@ class TServiceRepositoryTest {
     }
 
     @Test
-    void "findByName should filter service by name"() {
-        def res = repository.findByName(SERVICE_NAME)
+    void "should filter service by id"() {
+        def res = repository.findById(SERVICE_ID)
 
         assert res == service()
     }
 
     @Test
-    void "findByName should fail when requested by unknown name"() {
+    void "should fail filter service by id when requested by unknown id"() {
         shouldFail(NotFoundException) {
-            repository.findByName('unknown')
+            repository.findById('unknown')
         }
     }
 }
