@@ -1,0 +1,27 @@
+plugins {
+    id 'maven-publish'
+}
+
+dependencies {
+    api 'org.apache.thrift:libthrift:0.13.0'
+
+    implementation 'org.mapstruct:mapstruct:1.3.1.Final'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.3.1.Final'
+
+    implementation 'org.reflections:reflections:0.9.12'
+    implementation 'com.google.code.gson:gson'
+
+    testImplementation project(':examples:thrift')
+    testImplementation 'org.codehaus.groovy:groovy-test:3.0.3'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+    testImplementation 'org.mockito:mockito-core'
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.java
+        }
+    }
+}

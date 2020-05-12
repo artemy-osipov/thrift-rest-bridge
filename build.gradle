@@ -15,6 +15,9 @@ subprojects {
     dependencies {
         implementation platform('org.springframework.boot:spring-boot-dependencies:2.2.6.RELEASE')
         annotationProcessor platform('org.springframework.boot:spring-boot-dependencies:2.2.6.RELEASE')
+
+        compileOnly 'org.projectlombok:lombok'
+        annotationProcessor 'org.projectlombok:lombok'
     }
 
     test {
