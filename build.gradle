@@ -1,26 +1,33 @@
 subprojects {
-    apply plugin: 'java-library'
+    apply plugin: 'java'
     apply plugin: 'groovy'
 
     group = 'io.github.artemy.osipov.thrift'
     version = '0.6.0-SNAPSHOT'
 
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+    java {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
 
     repositories {
         jcenter()
     }
 
     dependencies {
-        implementation platform('org.springframework.boot:spring-boot-dependencies:2.2.6.RELEASE')
-        annotationProcessor platform('org.springframework.boot:spring-boot-dependencies:2.2.6.RELEASE')
-
         compileOnly 'org.projectlombok:lombok'
         annotationProcessor 'org.projectlombok:lombok'
     }
 
     test {
         useJUnitPlatform()
+    }
+}
+
+
+subprojects {
+    dependencies {
+        implementation platform('org.springframework.boot:spring-boot-dependencies:2.2.6.RELEASE')
+        annotationProcessor platform('org.springframework.boot:spring-boot-dependencies:2.2.6.RELEASE')
     }
 }

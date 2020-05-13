@@ -1,6 +1,5 @@
 package io.github.artemy.osipov.thrift.bridge.spring.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.artemy.osipov.thrift.bridge.spring.controllers.BridgeController;
 import io.github.artemy.osipov.thrift.bridge.spring.controllers.ErrorHandler;
 import io.github.artemy.osipov.thrift.bridge.core.BridgeFacade;
@@ -35,8 +34,8 @@ public class BridgeMvcConfiguration {
     }
 
     @Bean
-    public BridgeController bridgeController(TServiceRepository repository, BridgeFacade bridgeFacade, ObjectMapper objectMapper) {
-        return new BridgeController(repository, bridgeFacade, objectMapper);
+    public BridgeController bridgeController(TServiceRepository repository, BridgeFacade bridgeFacade) {
+        return new BridgeController(repository, bridgeFacade);
     }
 }
 

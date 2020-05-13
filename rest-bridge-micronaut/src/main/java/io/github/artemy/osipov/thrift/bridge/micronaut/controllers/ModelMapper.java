@@ -1,8 +1,8 @@
-package io.github.artemy.osipov.thrift.bridge.spring.controllers;
+package io.github.artemy.osipov.thrift.bridge.micronaut.controllers;
 
 import io.github.artemy.osipov.thrift.bridge.core.TService;
 import io.github.artemy.osipov.thrift.bridge.core.TService.TOperation;
-import io.github.artemy.osipov.thrift.bridge.spring.controllers.dto.Service;
+import io.github.artemy.osipov.thrift.bridge.micronaut.controllers.dto.Service;
 import org.apache.thrift.TServiceClient;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

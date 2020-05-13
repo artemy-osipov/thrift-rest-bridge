@@ -1,0 +1,25 @@
+def micronautVersion = '2.0.0.M3'
+
+dependencies {
+    annotationProcessor platform("io.micronaut:micronaut-bom:$micronautVersion")
+    testAnnotationProcessor platform("io.micronaut:micronaut-bom:$micronautVersion")
+    implementation platform("io.micronaut:micronaut-bom:$micronautVersion")
+
+    annotationProcessor 'io.micronaut:micronaut-inject-java'
+    annotationProcessor 'io.micronaut:micronaut-validation'
+
+    implementation 'io.micronaut:micronaut-inject'
+    implementation 'io.micronaut:micronaut-validation'
+    implementation 'io.micronaut:micronaut-http-server-netty'
+
+    runtimeOnly 'ch.qos.logback:logback-classic:1.2.3'
+
+    implementation project(':examples:thrift')
+    implementation project(':rest-bridge-micronaut')
+
+    testAnnotationProcessor 'io.micronaut:micronaut-inject-java'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api'
+    testImplementation 'io.micronaut.test:micronaut-test-junit5'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+    testImplementation 'io.micronaut:micronaut-http-client'
+}

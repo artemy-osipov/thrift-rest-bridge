@@ -1,0 +1,3 @@
+micronaut.application.name: micronaut-app
+
+bridge.thrift.scanPackage: io.github.artemy.osipov.thrift.bridge.test

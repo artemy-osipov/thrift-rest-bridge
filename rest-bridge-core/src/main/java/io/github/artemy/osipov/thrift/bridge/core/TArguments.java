@@ -29,7 +29,7 @@ public class TArguments {
     private final Parameter[] parameters;
 
     public Object[] args(String body) {
-        JsonObject jsonObject = new JsonParser().parse(body).getAsJsonObject();
+        JsonObject jsonObject = JsonParser.parseString(body).getAsJsonObject();
         return Arrays.stream(parameters)
                 .map(p -> gson.fromJson(jsonObject.get(p.getName()), p.getParameterizedType()))
                 .toArray(Object[]::new);

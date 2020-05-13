@@ -4,7 +4,6 @@ import io.github.artemy.osipov.thrift.bridge.core.BridgeFacade
 import io.github.artemy.osipov.thrift.bridge.core.TServiceRepository
 import io.github.artemy.osipov.thrift.bridge.core.exception.NotFoundException
 import io.github.artemy.osipov.thrift.bridge.spring.config.BridgeAutoConfiguration
-import io.github.artemy.osipov.thrift.bridge.spring.controllers.dto.ProxyRequestDTO
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -19,8 +18,6 @@ import org.springframework.test.web.servlet.request.RequestPostProcessor
 import java.nio.charset.StandardCharsets
 
 import static io.github.artemy.osipov.thrift.bridge.spring.TestData.*
-import static io.github.artemy.osipov.thrift.bridge.spring.utils.JsonUtils.asNormalizedJson
-import static io.github.artemy.osipov.thrift.bridge.spring.utils.JsonUtils.toJson
 import static org.hamcrest.Matchers.is
 import static org.mockito.ArgumentMatchers.any
 import static org.mockito.Mockito.doReturn
@@ -119,7 +116,7 @@ class BridgeControllerIT {
     void "services-operations endpoint should proxy request to thrift"() {
         doReturn(thriftTestStruct())
                 .when(bridgeService)
-                .proxy(operation(), THRIFT_ENDPOINT, asNormalizedJson(proxyRequestBody()))
+                .proxy(operation(), THRIFT_ENDPOINT, proxyRequestBody())
 
         def req = post("/services/{service}/operations/{operation}", SERVICE_ID, OPERATION_NAME)
                 .with(jsonUtf8Processor)
@@ -127,14 +124,14 @@ class BridgeControllerIT {
 
         mockMvc.perform(req)
                 .andExpect(status().isOk())
-                .andExpect(content().json(toJson(thriftTestStruct())))
+                .andExpect(content().json("""{"stringField": "some"}"""))
     }
 
     @Test
     void "services-operations endpoint should interpret null proxy result as empty"() {
         doReturn(null)
                 .when(bridgeService)
-                .proxy(operation(), THRIFT_ENDPOINT, asNormalizedJson(proxyRequestBody()))
+                .proxy(operation(), THRIFT_ENDPOINT, proxyRequestBody())
 
         def req = post("/services/{service}/operations/{operation}", SERVICE_ID, OPERATION_NAME)
                 .with(jsonUtf8Processor)
@@ -149,7 +146,7 @@ class BridgeControllerIT {
     void "services-operations endpoint should fail when requested without endpoint"() {
         def req = post("/services/{service}/operations/{operation}", SERVICE_ID, OPERATION_NAME)
                 .with(jsonUtf8Processor)
-                .content(toJson(new ProxyRequestDTO()))
+                .content("{}")
 
         mockMvc.perform(req)
                 .andExpect(status().isBadRequest())
