@@ -1,4 +1,4 @@
-package io.github.artemy.osipov.thrift.bridge.spring
+package io.github.artemy.osipov.thrift.bridge.spec
 
 import groovy.transform.CompileStatic
 import io.github.artemy.osipov.thrift.bridge.core.TService

@@ -6,6 +6,7 @@ pluginManagement {
 rootProject.name = "thrift-rest-bridge"
 
 include 'rest-bridge-core'
+include 'rest-bridge-spec'
 include 'rest-bridge-micronaut'
 include 'rest-bridge-spring-boot-starter'
 include ':examples:thrift'
