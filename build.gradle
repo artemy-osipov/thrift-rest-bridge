@@ -17,9 +17,32 @@ subprojects {
     dependencies {
         compileOnly 'org.projectlombok:lombok:1.18.12'
         annotationProcessor 'org.projectlombok:lombok:1.18.12'
+
+        testImplementation 'org.codehaus.groovy:groovy-test:3.0.3'
+        testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.2'
+        testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.6.2'
     }
 
     test {
         useJUnitPlatform()
+    }
+}
+
+configure(subprojects.findAll { ['rest-bridge-micronaut', 'micronaut-app'].contains it.name }) {
+    dependencies {
+        def micronautVersion = '2.0.0.M3'
+        annotationProcessor platform("io.micronaut:micronaut-bom:$micronautVersion")
+        implementation platform("io.micronaut:micronaut-bom:$micronautVersion")
+        testAnnotationProcessor platform("io.micronaut:micronaut-bom:$micronautVersion")
+    }
+}
+
+configure(subprojects.findAll { ['rest-bridge-spring-boot-starter', 'spring-boot-app'].contains it.name }) {
+    dependencies {
+        def bootVersion = '2.2.6.RELEASE'
+        implementation platform("org.springframework.boot:spring-boot-dependencies:$bootVersion")
+        annotationProcessor platform("org.springframework.boot:spring-boot-dependencies:$bootVersion")
+        annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+        annotationProcessor 'org.springframework.boot:spring-boot-autoconfigure-processor'
     }
 }

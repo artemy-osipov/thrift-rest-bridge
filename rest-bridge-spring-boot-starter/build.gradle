@@ -4,11 +4,7 @@ plugins {
 }
 
 dependencies {
-    implementation platform('org.springframework.boot:spring-boot-dependencies:2.2.6.RELEASE')
-    annotationProcessor platform('org.springframework.boot:spring-boot-dependencies:2.2.6.RELEASE')
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-    annotationProcessor 'org.springframework.boot:spring-boot-autoconfigure-processor'
 
     implementation project(':rest-bridge-core')
 
@@ -17,10 +13,9 @@ dependencies {
 
     implementation 'io.github.artemy.osipov.thrift:jackson-datatype-thrift:0.1.0'
 
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation project(':examples:thrift')
     testImplementation project(':rest-bridge-spec')
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.codehaus.groovy:groovy-test:3.0.3'
 }
 
 publishing {
