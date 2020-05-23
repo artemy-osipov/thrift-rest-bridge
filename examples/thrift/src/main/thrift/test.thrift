@@ -12,6 +12,7 @@ struct TestStruct {
     9: binary binaryField
     10: TestInnerStruct innerComplexField
     11: list<TestInnerStruct> listInnerComplexField
+    12: TestUnion unionField
 }
 
 struct TestInnerStruct {
@@ -22,6 +23,11 @@ struct TestInnerStruct {
 enum TestEnum {
     ENUM_1
     ENUM_2
+}
+
+union TestUnion {
+    1: TestEnum enum1
+    2: TestEnum enum2
 }
 
 exception TestException {

@@ -123,7 +123,8 @@ class TestData {
                         new SpecField('enumField', SpecType.primitive(DataType.STRING)),
                         new SpecField('binaryField', SpecType.primitive(DataType.STRING)),
                         new SpecField('innerComplexField', innerComplexSpecType()),
-                        new SpecField('listInnerComplexField', SpecType.array(innerComplexSpecType()))
+                        new SpecField('listInnerComplexField', SpecType.array(innerComplexSpecType())),
+                        new SpecField('unionField', SpecType.object())
                 )),
                 new SpecField('listComplexField', SpecType.array(innerComplexSpecType())),
                 new SpecField('setComplexField', SpecType.array(innerComplexSpecType()))
@@ -158,7 +159,9 @@ class TestData {
             "listInnerComplexField": [{
               "f1": "",
               "f2": ""
-            }]
+            }],
+            "unionField": {
+            }
           },
           "listComplexField": [{
             "f1": "",
