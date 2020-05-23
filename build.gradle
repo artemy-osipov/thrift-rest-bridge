@@ -1,9 +1,16 @@
+plugins {
+    id 'com.jfrog.bintray' version '1.8.5' apply false
+}
+
+def micronautModules = [project(':rest-bridge-micronaut'), project(':examples:micronaut-app')]
+def springModules = [project(':rest-bridge-spring-boot-starter'), project(':examples:spring-boot-app')]
+def publishModules = [project(':rest-bridge-core'), project(':rest-bridge-micronaut'), project(':rest-bridge-spring-boot-starter')]
+
 subprojects {
     apply plugin: 'java'
     apply plugin: 'groovy'
 
     group = 'io.github.artemy.osipov.thrift'
-    version = '0.6.0-SNAPSHOT'
 
     java {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -28,21 +35,57 @@ subprojects {
     }
 }
 
-configure(subprojects.findAll { ['rest-bridge-micronaut', 'micronaut-app'].contains it.name }) {
+configure(micronautModules) {
     dependencies {
-        def micronautVersion = '2.0.0.M3'
-        annotationProcessor platform("io.micronaut:micronaut-bom:$micronautVersion")
-        implementation platform("io.micronaut:micronaut-bom:$micronautVersion")
-        testAnnotationProcessor platform("io.micronaut:micronaut-bom:$micronautVersion")
+        def micronautBom = 'io.micronaut:micronaut-bom:2.0.0.M3'
+        annotationProcessor platform(micronautBom)
+        implementation platform(micronautBom)
+        testAnnotationProcessor platform(micronautBom)
     }
 }
 
-configure(subprojects.findAll { ['rest-bridge-spring-boot-starter', 'spring-boot-app'].contains it.name }) {
+configure(springModules) {
     dependencies {
-        def bootVersion = '2.2.6.RELEASE'
-        implementation platform("org.springframework.boot:spring-boot-dependencies:$bootVersion")
-        annotationProcessor platform("org.springframework.boot:spring-boot-dependencies:$bootVersion")
+        def springBootBom = 'org.springframework.boot:spring-boot-dependencies:2.2.6.RELEASE'
+        implementation platform(springBootBom)
+        annotationProcessor platform(springBootBom)
         annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
         annotationProcessor 'org.springframework.boot:spring-boot-autoconfigure-processor'
+    }
+}
+
+configure(publishModules) {
+    apply plugin: 'maven-publish'
+    apply plugin: 'com.jfrog.bintray'
+
+    java {
+        withJavadocJar()
+        withSourcesJar()
+    }
+
+    publishing {
+        publications {
+            maven(MavenPublication) {
+                from components.java
+            }
+        }
+    }
+
+    bintray {
+        user = System.getenv('BINTRAY_USER')
+        key = System.getenv('BINTRAY_KEY')
+        publications = ['maven']
+        pkg {
+            repo = 'oss'
+            name = it.name
+            licenses = ['MIT']
+            desc = 'Thrift-Rest bridge for proxy thrift services'
+            websiteUrl = 'https://github.com/artemy-osipov/thrift-rest-bridge'
+            issueTrackerUrl = 'https://github.com/artemy-osipov/thrift-rest-bridge/issues'
+            vcsUrl = 'https://github.com/artemy-osipov/thrift-rest-bridge.git'
+
+            githubRepo = 'artemy-osipov/thrift-rest-bridge'
+            githubReleaseNotesFile = 'README.md'
+        }
     }
 }

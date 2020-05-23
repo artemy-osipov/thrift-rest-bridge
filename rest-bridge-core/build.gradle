@@ -1,6 +1,5 @@
 plugins {
     id 'java-library'
-    id 'maven-publish'
 }
 
 dependencies {
@@ -11,12 +10,4 @@ dependencies {
 
     testImplementation project(':examples:thrift')
     testImplementation 'org.mockito:mockito-core:3.3.3'
-}
-
-publishing {
-    publications {
-        maven(MavenPublication) {
-            from components.java
-        }
-    }
 }
