@@ -51,7 +51,7 @@ public class BridgeController {
         TOperation operation = serviceRepository.findById(serviceId)
                 .operation(operationName);
 
-        Object resp = bridgeFacade.proxy(operation, request.getEndpoint(), request.getBody());
+        Object resp = bridgeFacade.proxy(operation, request.getEndpoint(), request.getBody().toString());
 
         return resp == null ? "" : resp;
     }

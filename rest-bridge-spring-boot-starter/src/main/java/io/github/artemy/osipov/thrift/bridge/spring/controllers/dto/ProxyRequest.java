@@ -1,5 +1,6 @@
 package io.github.artemy.osipov.thrift.bridge.spring.controllers.dto;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
@@ -9,5 +10,5 @@ public class ProxyRequest {
 
     @NotBlank
     private String endpoint;
-    private String body;
+    private JsonNode body;
 }

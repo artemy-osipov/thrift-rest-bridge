@@ -12,9 +12,9 @@ class TArgumentsTest {
         def res = arguments.args(proxyRequestBody())
 
         assert res[0] == THRIFT_SIMPLE_FIELD
-        assert res[1].equals(thriftTestStruct())
-        assert res[2].equals([thriftTestInnerStruct()])
-        assert res[3].equals([thriftTestInnerStruct()].toSet())
+        assert res[1] == thriftTestStruct()
+        assert res[2] == [thriftTestInnerStruct()]
+        assert res[3] == [thriftTestInnerStruct()].toSet()
     }
 
     @Test

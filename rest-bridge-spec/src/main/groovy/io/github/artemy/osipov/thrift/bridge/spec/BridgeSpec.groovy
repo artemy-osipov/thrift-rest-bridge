@@ -8,9 +8,12 @@ import io.restassured.http.ContentType
 import org.apache.http.HttpStatus
 import org.junit.jupiter.api.Test
 
+import static io.github.artemy.osipov.thrift.bridge.spec.IsEqualJson.json
 import static io.github.artemy.osipov.thrift.bridge.spec.TestData.*
 import static org.hamcrest.CoreMatchers.equalTo
 import static org.mockito.ArgumentMatchers.any
+import static org.mockito.ArgumentMatchers.argThat
+import static org.mockito.ArgumentMatchers.eq
 import static org.mockito.Mockito.doReturn
 import static org.mockito.Mockito.doThrow
 
@@ -83,7 +86,7 @@ class BridgeSpec {
     void "services-operations endpoint should proxy request to thrift"() {
         doReturn(thriftTestStruct())
                 .when(bridgeFacade)
-                .proxy(operation(), THRIFT_ENDPOINT, proxyRequestBody())
+                .proxy(eq(operation()), eq(THRIFT_ENDPOINT), argThat(json(proxyRequestBody())))
 
         RestAssured.given()
                 .body(proxyRequest())
@@ -103,6 +106,7 @@ class BridgeSpec {
                 .body(proxyRequest())
                 .contentType(ContentType.JSON)
                 .post("/services/$SERVICE_ID/operations/$OPERATION_NAME")
+                .prettyPeek()
                 .then()
                 .statusCode(HttpStatus.SC_OK)
                 .body(equalTo(''))

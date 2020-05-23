@@ -34,7 +34,7 @@ class TestData {
         """
           {
             "endpoint": "$THRIFT_ENDPOINT",
-            "body": "${proxyRequestBody().replaceAll('"', '\\\\"')}"
+            "body": ${proxyRequestBody()}
           }
         """
     }

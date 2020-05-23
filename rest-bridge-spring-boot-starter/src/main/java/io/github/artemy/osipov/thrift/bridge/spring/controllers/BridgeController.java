@@ -48,7 +48,7 @@ public class BridgeController {
         TOperation operation = serviceRepository.findById(serviceId)
                 .operation(operationName);
 
-        return bridgeFacade.proxy(operation, request.getEndpoint(), request.getBody());
+        return bridgeFacade.proxy(operation, request.getEndpoint(), request.getBody().toString());
     }
 
     @GetMapping("/services/{serviceId}/operations/{operationName}/template")
