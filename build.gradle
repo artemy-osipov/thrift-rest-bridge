@@ -79,7 +79,7 @@ configure(publishModules) {
         publications = ['maven']
         pkg {
             repo = 'oss'
-            name = it.name
+            name = project.name
             licenses = ['MIT']
             desc = 'Thrift-Rest bridge for proxy thrift services'
             websiteUrl = 'https://github.com/artemy-osipov/thrift-rest-bridge'
