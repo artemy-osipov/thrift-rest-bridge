@@ -10,7 +10,7 @@ dependencies {
     implementation 'org.mapstruct:mapstruct:1.3.1.Final'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.3.1.Final'
 
-    implementation 'io.github.artemy.osipov.thrift:jackson-datatype-thrift:0.2.0'
+    implementation 'io.github.artemy.osipov.thrift:jackson-datatype-thrift:0.3.0'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation project(':examples:thrift')

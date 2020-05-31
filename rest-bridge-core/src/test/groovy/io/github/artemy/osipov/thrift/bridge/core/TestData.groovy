@@ -4,15 +4,16 @@ import groovy.transform.CompileStatic
 import io.github.artemy.osipov.thrift.bridge.core.spec.DataType
 import io.github.artemy.osipov.thrift.bridge.core.spec.SpecField
 import io.github.artemy.osipov.thrift.bridge.core.spec.SpecType
+import io.github.artemy.osipov.thrift.bridge.test.TestComplexStruct
 import io.github.artemy.osipov.thrift.bridge.test.TestService
-import io.github.artemy.osipov.thrift.bridge.test.TestStruct
+import io.github.artemy.osipov.thrift.bridge.test.TestUnion
 import org.apache.thrift.TServiceClient
 import io.github.artemy.osipov.thrift.bridge.test.AnotherTestService
 import io.github.artemy.osipov.thrift.bridge.test.ErrorInfo
 import io.github.artemy.osipov.thrift.bridge.test.SubTestService
 import io.github.artemy.osipov.thrift.bridge.test.TestEnum
 import io.github.artemy.osipov.thrift.bridge.test.TestException
-import io.github.artemy.osipov.thrift.bridge.test.TestInnerStruct
+import io.github.artemy.osipov.thrift.bridge.test.TestSimpleStruct
 
 @CompileStatic
 class TestData {
@@ -36,8 +37,8 @@ class TestData {
         service().operation(OPERATION_NAME)
     }
 
-    static TestStruct thriftTestStruct() {
-        new TestStruct().tap {
+    static TestComplexStruct thriftComplexStruct() {
+        new TestComplexStruct().tap {
             stringField = 'some'
             boolField = true
             byteField = 1 as byte
@@ -47,13 +48,16 @@ class TestData {
             doubleField = 5.5d
             enumField = TestEnum.ENUM_2
             binaryField = [1, 2, 3] as byte[]
-            innerComplexField = thriftTestInnerStruct()
-            listInnerComplexField = [thriftTestInnerStruct()]
+            structField = thriftSimpleStruct()
+            listStructField = [thriftSimpleStruct()]
+            unionField = new TestUnion().tap {
+                enum1 = TestEnum.ENUM_1
+            }
         }
     }
 
-    static TestInnerStruct thriftTestInnerStruct() {
-        new TestInnerStruct('f1', 'f2')
+    static TestSimpleStruct thriftSimpleStruct() {
+        new TestSimpleStruct(true, 'f2')
     }
 
     static TestException thriftException() {
@@ -66,45 +70,46 @@ class TestData {
     }
 
     static Object[] proxyArgs() {
-        new Object[]{THRIFT_SIMPLE_FIELD, thriftTestStruct(), [thriftTestInnerStruct()], [thriftTestInnerStruct()].toSet()}
+        new Object[]{THRIFT_SIMPLE_FIELD, thriftComplexStruct(), [thriftSimpleStruct()], [thriftSimpleStruct()].toSet()}
     }
 
     static String proxyRequestBody() {
         """
           {
-            "simpleField": $THRIFT_SIMPLE_FIELD,
-            "complexField": ${jsonTestStruct()},
-            "listComplexField": [${jsonTestInnerStruct()}],
-            "setComplexField": [${jsonTestInnerStruct()}]
+            "simpleField": "$THRIFT_SIMPLE_FIELD",
+            "complexField": ${jsonComplexStruct()},
+            "listStructField": [${jsonSimpleStruct()}],
+            "setStructField": [${jsonSimpleStruct()}]
           }
         """
     }
 
-    static String jsonTestStruct() {
-        def thrift = thriftTestStruct()
+    static String jsonComplexStruct() {
+        def thrift = thriftComplexStruct()
         """
           {
-            "stringField": $thrift.stringField,
+            "stringField": "$thrift.stringField",
             "boolField": $thrift.boolField,
             "byteField": $thrift.byteField,
             "i16Field": $thrift.i16Field,
             "i32Field": $thrift.i32Field,
             "i64Field": $thrift.i64Field,
             "doubleField": $thrift.doubleField,
-            "enumField": $thrift.enumField,
-            "binaryField": ${thrift.binaryField.encodeBase64()},
-            "innerComplexField": ${jsonTestInnerStruct()},
-            "listInnerComplexField": [${jsonTestInnerStruct()}]
+            "enumField": "$thrift.enumField",
+            "binaryField": "${thrift.binaryField.encodeBase64()}",
+            "structField": ${jsonSimpleStruct()},
+            "listStructField": [${jsonSimpleStruct()}],
+            "unionField": { "enum1": "$thrift.unionField.enum1" }
           }
         """
     }
 
-    static String jsonTestInnerStruct() {
-        def thrift = thriftTestInnerStruct()
+    static String jsonSimpleStruct() {
+        def thrift = thriftSimpleStruct()
         """
           {
             "f1": $thrift.f1,
-            "f2": $thrift.f2
+            "f2": "$thrift.f2"
           }
         """
     }
@@ -122,18 +127,18 @@ class TestData {
                         new SpecField('doubleField', SpecType.primitive(DataType.NUMBER)),
                         new SpecField('enumField', SpecType.primitive(DataType.STRING)),
                         new SpecField('binaryField', SpecType.primitive(DataType.STRING)),
-                        new SpecField('innerComplexField', innerComplexSpecType()),
-                        new SpecField('listInnerComplexField', SpecType.array(innerComplexSpecType())),
+                        new SpecField('structField', complexSpecType()),
+                        new SpecField('listStructField', SpecType.array(complexSpecType())),
                         new SpecField('unionField', SpecType.object())
                 )),
-                new SpecField('listComplexField', SpecType.array(innerComplexSpecType())),
-                new SpecField('setComplexField', SpecType.array(innerComplexSpecType()))
+                new SpecField('listStructField', SpecType.array(complexSpecType())),
+                new SpecField('setStructField', SpecType.array(complexSpecType()))
         )
     }
 
-    static SpecType innerComplexSpecType() {
+    static SpecType complexSpecType() {
         SpecType.object(
-                new SpecField('f1', SpecType.primitive(DataType.STRING)),
+                new SpecField('f1', SpecType.primitive(DataType.BOOLEAN)),
                 new SpecField('f2', SpecType.primitive(DataType.STRING))
         )
     }
@@ -152,23 +157,23 @@ class TestData {
             "doubleField": 0,
             "enumField": "",
             "binaryField": "",
-            "innerComplexField": {
-              "f1": "",
+            "structField": {
+              "f1": false,
               "f2": ""
             },
-            "listInnerComplexField": [{
-              "f1": "",
+            "listStructField": [{
+              "f1": false,
               "f2": ""
             }],
             "unionField": {
             }
           },
-          "listComplexField": [{
-            "f1": "",
+          "listStructField": [{
+            "f1": false,
             "f2": ""
           }],
-          "setComplexField": [{
-            "f1": "",
+          "setStructField": [{
+            "f1": false,
             "f2": ""
           }]
         }"""

@@ -1,61 +1,58 @@
 package io.github.artemy.osipov.thrift.bridge.core.spec;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonNull;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import lombok.SneakyThrows;
 
 public class TemplateSpec {
 
-    private final Gson gson = new GsonBuilder()
-            .setPrettyPrinting()
-            .serializeNulls()
-            .create();
+    private final ObjectMapper mapper = new ObjectMapper();
+    private final JsonNodeFactory nodeFactory = mapper.getNodeFactory();
 
     public String format(SpecType type) {
         return format(type, Integer.MAX_VALUE);
     }
 
+    @SneakyThrows
     public String format(SpecType type, int depth) {
-        return gson.toJson(
+        return mapper.writeValueAsString(
                 element(type, depth)
         );
     }
 
-    private JsonElement element(SpecType type, int depth) {
+    private JsonNode element(SpecType type, int depth) {
         if (depth == 0) {
-            return JsonNull.INSTANCE;
+            return nodeFactory.nullNode();
         }
 
         switch (type.getType()) {
             case BOOLEAN:
-                return new JsonPrimitive(false);
+                return nodeFactory.booleanNode(false);
             case NUMBER:
-                return new JsonPrimitive(0);
+                return nodeFactory.numberNode(0);
             case STRING:
-                return new JsonPrimitive("");
+                return nodeFactory.textNode("");
             case ARRAY:
                 return array(type.getContainerType(), depth);
             case OBJECT:
                 return object(type.getNested(), depth);
             default:
-                return JsonNull.INSTANCE;
+                return nodeFactory.nullNode();
         }
     }
 
-    private JsonArray array(SpecType containerType, int depth) {
-        var node = new JsonArray(1);
-        node.add(element(containerType, depth - 1));
-        return node;
+    private ArrayNode array(SpecType containerType, int depth) {
+        return nodeFactory.arrayNode()
+                .add(element(containerType, depth - 1));
     }
 
-    private JsonObject object(SpecField[] fields, int depth) {
-        var node = new JsonObject();
+    private ObjectNode object(SpecField[] fields, int depth) {
+        var node = nodeFactory.objectNode();
         for (SpecField field : fields) {
-            node.add(field.getName(), element(field.getType(), depth - 1));
+            node.set(field.getName(), element(field.getType(), depth - 1));
         }
         return node;
     }

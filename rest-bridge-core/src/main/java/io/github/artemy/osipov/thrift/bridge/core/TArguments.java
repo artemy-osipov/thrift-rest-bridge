@@ -1,35 +1,31 @@
 package io.github.artemy.osipov.thrift.bridge.core;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.artemy.osipov.thrift.bridge.core.spec.SpecField;
 import io.github.artemy.osipov.thrift.bridge.core.spec.SpecType;
-import io.github.artemy.osipov.thrift.bridge.core.thrift.ByteBufferDeserializer;
-import io.github.artemy.osipov.thrift.bridge.core.thrift.TBaseTypeAdapterFactory;
+import io.github.artemy.osipov.thrift.jackson.ThriftModule;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 
 import java.lang.reflect.Parameter;
-import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 @RequiredArgsConstructor
 public class TArguments {
 
-    private final Gson gson = new GsonBuilder()
-            .registerTypeAdapter(ByteBuffer.class, new ByteBufferDeserializer())
-            .registerTypeAdapterFactory(new TBaseTypeAdapterFactory())
-            .create();
+    private final ObjectMapper mapper = new ObjectMapper()
+            .registerModule(new ThriftModule());
 
     @Getter
     private final Parameter[] parameters;
 
+    @SneakyThrows
     public Object[] args(String body) {
-        JsonObject jsonObject = JsonParser.parseString(body).getAsJsonObject();
+        JsonNode json = mapper.readTree(body);
         return Arrays.stream(parameters)
-                .map(p -> gson.fromJson(jsonObject.get(p.getName()), p.getParameterizedType()))
+                .map(p -> mapper.convertValue(json.get(p.getName()), mapper.constructType(p.getParameterizedType())))
                 .toArray(Object[]::new);
     }
 

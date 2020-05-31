@@ -1,6 +1,6 @@
 namespace java io.github.artemy.osipov.thrift.bridge.test
 
-struct TestStruct {
+struct TestComplexStruct {
     1: string stringField
     2: bool boolField
     3: byte byteField
@@ -10,14 +10,14 @@ struct TestStruct {
     7: double doubleField
     8: TestEnum enumField
     9: binary binaryField
-    10: TestInnerStruct innerComplexField
-    11: list<TestInnerStruct> listInnerComplexField
+    10: TestSimpleStruct structField
+    11: list<TestSimpleStruct> listStructField
     12: TestUnion unionField
 }
 
-struct TestInnerStruct {
-    1: string f1
-    2: string f2
+struct TestSimpleStruct {
+    1: required bool f1
+    2: required string f2
 }
 
 enum TestEnum {
@@ -28,6 +28,11 @@ enum TestEnum {
 union TestUnion {
     1: TestEnum enum1
     2: TestEnum enum2
+}
+
+union TestComplexUnion {
+    1: TestEnum enumField
+    2: TestSimpleStruct structField
 }
 
 exception TestException {
@@ -41,11 +46,11 @@ struct ErrorInfo {
 
 service TestService {
 
-    list<TestStruct> testOperation (
+    list<TestComplexStruct> testOperation (
         1: string simpleField
-        2: TestStruct complexField
-        3: list<TestInnerStruct> listComplexField
-        4: set<TestInnerStruct> setComplexField
+        2: TestComplexStruct complexField
+        3: list<TestSimpleStruct> listStructField
+        4: set<TestSimpleStruct> setStructField
     ) throws (1: TestException e)
 }
 

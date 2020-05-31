@@ -1,8 +1,8 @@
 package io.github.artemy.osipov.thrift.bridge.core
 
-import io.github.artemy.osipov.thrift.bridge.test.TestInnerStruct
+import io.github.artemy.osipov.thrift.bridge.test.TestComplexStruct
 import io.github.artemy.osipov.thrift.bridge.test.TestService
-import io.github.artemy.osipov.thrift.bridge.test.TestStruct
+import io.github.artemy.osipov.thrift.bridge.test.TestSimpleStruct
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -29,19 +29,19 @@ class TOperationTest {
         assert res.parameters[0].name == 'simpleField'
         assert res.parameters[0].type == String
         assert res.parameters[1].name == 'complexField'
-        assert res.parameters[1].type == TestStruct
-        assert res.parameters[2].name == 'listComplexField'
-        assert res.parameters[2].type == List<TestInnerStruct>
-        assert res.parameters[3].name == 'setComplexField'
-        assert res.parameters[3].type == Set<TestInnerStruct>
+        assert res.parameters[1].type == TestComplexStruct
+        assert res.parameters[2].name == 'listStructField'
+        assert res.parameters[2].type == List<TestSimpleStruct>
+        assert res.parameters[3].name == 'setStructField'
+        assert res.parameters[3].type == Set<TestSimpleStruct>
     }
 
     @Test
     void "should proxy request to thrift"() {
-        def resp = [thriftTestStruct()]
+        def resp = [thriftComplexStruct()]
         doReturn(resp)
                 .when(thriftClient)
-                .testOperation(THRIFT_SIMPLE_FIELD, thriftTestStruct(), [thriftTestInnerStruct()], Set.of(thriftTestInnerStruct()))
+                .testOperation(THRIFT_SIMPLE_FIELD, thriftComplexStruct(), [thriftSimpleStruct()], Set.of(thriftSimpleStruct()))
 
         def res = operation.proxy(THRIFT_ENDPOINT, proxyArgs())
 
@@ -53,7 +53,7 @@ class TOperationTest {
         def resp = thriftException()
         doThrow(resp)
                 .when(thriftClient)
-                .testOperation(THRIFT_SIMPLE_FIELD, thriftTestStruct(), [thriftTestInnerStruct()], Set.of(thriftTestInnerStruct()))
+                .testOperation(THRIFT_SIMPLE_FIELD, thriftComplexStruct(), [thriftSimpleStruct()], Set.of(thriftSimpleStruct()))
 
         def res = operation.proxy(THRIFT_ENDPOINT, proxyArgs())
 

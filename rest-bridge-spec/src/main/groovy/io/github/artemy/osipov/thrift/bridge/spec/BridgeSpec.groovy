@@ -84,7 +84,7 @@ class BridgeSpec {
 
     @Test
     void "services-operations endpoint should proxy request to thrift"() {
-        doReturn(thriftTestStruct())
+        doReturn(thriftComplexStruct())
                 .when(bridgeFacade)
                 .proxy(eq(operation()), eq(THRIFT_ENDPOINT), argThat(json(proxyRequestBody())))
 
@@ -93,7 +93,7 @@ class BridgeSpec {
                 .contentType(ContentType.JSON)
                 .post("/services/$SERVICE_ID/operations/$OPERATION_NAME")
                 .then()
-                .body('stringField', equalTo(thriftTestStruct().stringField))
+                .body('stringField', equalTo(thriftComplexStruct().stringField))
     }
 
     @Test

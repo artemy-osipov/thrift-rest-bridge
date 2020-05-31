@@ -18,7 +18,7 @@ class BridgeFacadeTest {
         doReturn(arguments)
                 .when(operation)
                 .getArguments()
-        def resp = thriftTestStruct()
+        def resp = thriftComplexStruct()
         doReturn(resp)
                 .when(operation)
                 .proxy(eq(THRIFT_ENDPOINT), any())

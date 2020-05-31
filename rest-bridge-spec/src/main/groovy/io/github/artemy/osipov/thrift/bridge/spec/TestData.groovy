@@ -3,9 +3,9 @@ package io.github.artemy.osipov.thrift.bridge.spec
 import groovy.transform.CompileStatic
 import io.github.artemy.osipov.thrift.bridge.core.TService
 import io.github.artemy.osipov.thrift.bridge.core.TService.TOperation
+import io.github.artemy.osipov.thrift.bridge.test.TestComplexStruct
 import io.github.artemy.osipov.thrift.bridge.test.TestEnum
 import io.github.artemy.osipov.thrift.bridge.test.TestService
-import io.github.artemy.osipov.thrift.bridge.test.TestStruct
 import io.github.artemy.osipov.thrift.bridge.test.TestUnion
 import org.apache.thrift.TServiceClient
 
@@ -26,8 +26,8 @@ class TestData {
         service().operation(OPERATION_NAME)
     }
 
-    static TestStruct thriftTestStruct() {
-        new TestStruct().tap {
+    static TestComplexStruct thriftComplexStruct() {
+        new TestComplexStruct().tap {
             stringField = 'some'
             unionField = new TestUnion().tap {
                 enum1 = TestEnum.ENUM_2
