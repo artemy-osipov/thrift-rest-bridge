@@ -20,6 +20,11 @@ struct TestSimpleStruct {
     2: required string f2
 }
 
+struct TestRecursiveStruct {
+    1: string f1
+    2: TestRecursiveStruct recursive
+}
+
 enum TestEnum {
     ENUM_1
     ENUM_2

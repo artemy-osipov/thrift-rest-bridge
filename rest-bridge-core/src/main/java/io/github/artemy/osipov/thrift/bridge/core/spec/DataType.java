@@ -1,16 +1,16 @@
 package io.github.artemy.osipov.thrift.bridge.core.spec;
 
-public enum DataType {
-    STRING, NUMBER, BOOLEAN, ARRAY, OBJECT;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
-    public boolean isPrimitive() {
-        switch (this) {
-            case STRING:
-            case NUMBER:
-            case BOOLEAN:
-                return true;
-            default:
-                return false;
-        }
-    }
+@Getter
+@RequiredArgsConstructor
+public enum DataType {
+    STRING(true),
+    NUMBER(true),
+    BOOLEAN(true),
+    ARRAY(false),
+    OBJECT(false);
+
+    private final boolean primitive;
 }

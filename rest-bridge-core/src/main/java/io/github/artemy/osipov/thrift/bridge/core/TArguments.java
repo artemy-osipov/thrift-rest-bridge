@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.artemy.osipov.thrift.bridge.core.spec.SpecField;
 import io.github.artemy.osipov.thrift.bridge.core.spec.SpecType;
+import io.github.artemy.osipov.thrift.bridge.core.spec.SpecTypeAdapter;
 import io.github.artemy.osipov.thrift.jackson.ThriftModule;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -30,9 +31,10 @@ public class TArguments {
     }
 
     public SpecType specType() {
+        var specTypeAdapter = new SpecTypeAdapter();
         return SpecType.object(
                 Arrays.stream(parameters)
-                        .map(p -> new SpecField(p.getName(), SpecType.of(p.getParameterizedType())))
+                        .map(p -> new SpecField(p.getName(), specTypeAdapter.from(p.getParameterizedType())))
                         .toArray(SpecField[]::new)
         );
     }

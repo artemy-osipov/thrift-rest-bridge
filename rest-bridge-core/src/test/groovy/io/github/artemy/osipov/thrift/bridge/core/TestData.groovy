@@ -127,20 +127,33 @@ class TestData {
                         new SpecField('doubleField', SpecType.primitive(DataType.NUMBER)),
                         new SpecField('enumField', SpecType.primitive(DataType.STRING)),
                         new SpecField('binaryField', SpecType.primitive(DataType.STRING)),
-                        new SpecField('structField', complexSpecType()),
-                        new SpecField('listStructField', SpecType.array(complexSpecType())),
-                        new SpecField('unionField', SpecType.object())
+                        new SpecField('structField', simpleStructSpecType()),
+                        new SpecField('listStructField', SpecType.array(simpleStructSpecType())),
+                        new SpecField('unionField', SpecType.object(
+                                new SpecField('enum1', SpecType.primitive(DataType.STRING)),
+                                new SpecField('enum2', SpecType.primitive(DataType.STRING))
+                        ))
                 )),
-                new SpecField('listStructField', SpecType.array(complexSpecType())),
-                new SpecField('setStructField', SpecType.array(complexSpecType()))
+                new SpecField('listStructField', SpecType.array(simpleStructSpecType())),
+                new SpecField('setStructField', SpecType.array(simpleStructSpecType()))
         )
     }
 
-    static SpecType complexSpecType() {
+    static SpecType simpleStructSpecType() {
         SpecType.object(
                 new SpecField('f1', SpecType.primitive(DataType.BOOLEAN)),
                 new SpecField('f2', SpecType.primitive(DataType.STRING))
         )
+    }
+
+    static SpecType recursiveSpecType() {
+        SpecField[] fields = [
+                new SpecField('f1', SpecType.primitive(DataType.STRING)),
+                new SpecField('stub', SpecType.object())
+        ]
+        def specType = SpecType.object(fields)
+        fields[1] = new SpecField('recursive', specType)
+        return specType
     }
 
     static String templateSpec() {
@@ -166,6 +179,8 @@ class TestData {
               "f2": ""
             }],
             "unionField": {
+              "enum1": "",
+              "enum2": ""
             }
           },
           "listStructField": [{

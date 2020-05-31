@@ -28,8 +28,11 @@ subprojects {
         annotationProcessor 'org.projectlombok:lombok:1.18.12'
 
         testImplementation 'org.codehaus.groovy:groovy-test:3.0.4'
-        testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.2'
-        testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.6.2'
+
+        def junitVersion = '5.6.2'
+        testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
+        testImplementation "org.junit.jupiter:junit-jupiter-params:$junitVersion"
+        testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
     }
 
     test {
