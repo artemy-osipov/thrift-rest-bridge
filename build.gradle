@@ -1,5 +1,5 @@
 plugins {
-    id 'nebula.release' version '15.0.1'
+    id 'nebula.release' version '15.0.3'
     id 'com.jfrog.bintray' version '1.8.5' apply false
     id 'com.github.ben-manes.versions' version '0.28.0'
 }
@@ -42,7 +42,7 @@ subprojects {
 
 configure(micronautModules) {
     dependencies {
-        def micronautBom = 'io.micronaut:micronaut-bom:2.0.0.M3'
+        def micronautBom = 'io.micronaut:micronaut-bom:2.0.0'
         annotationProcessor platform(micronautBom)
         implementation platform(micronautBom)
         testAnnotationProcessor platform(micronautBom)
@@ -51,7 +51,7 @@ configure(micronautModules) {
 
 configure(springModules) {
     dependencies {
-        def springBootBom = 'org.springframework.boot:spring-boot-dependencies:2.2.7.RELEASE'
+        def springBootBom = 'org.springframework.boot:spring-boot-dependencies:2.3.1.RELEASE'
         implementation platform(springBootBom)
         annotationProcessor platform(springBootBom)
         annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'

@@ -4,8 +4,10 @@ import io.github.artemy.osipov.thrift.bridge.core.BridgeFacade;
 import io.github.artemy.osipov.thrift.bridge.core.TService.TOperation;
 import io.github.artemy.osipov.thrift.bridge.core.TServiceRepository;
 import io.github.artemy.osipov.thrift.bridge.spring.controllers.dto.ProxyRequest;
+import io.github.artemy.osipov.thrift.bridge.spring.controllers.dto.ProxyResponse;
 import io.github.artemy.osipov.thrift.bridge.spring.controllers.dto.Service;
 import lombok.RequiredArgsConstructor;
+import org.springframework.util.ClassUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -48,7 +50,17 @@ public class BridgeController {
         TOperation operation = serviceRepository.findById(serviceId)
                 .operation(operationName);
 
-        return bridgeFacade.proxy(operation, request.getEndpoint(), request.getBody().toString());
+        Object resp = bridgeFacade.proxy(operation, request.getEndpoint(), request.getBody().toString());
+
+        if (resp == null || !isPrimitive(resp.getClass())) {
+            return resp;
+        } else {
+            return new ProxyResponse(resp);
+        }
+    }
+
+    private boolean isPrimitive(Class<?> type) {
+        return ClassUtils.isPrimitiveOrWrapper(type) || type == String.class;
     }
 
     @GetMapping("/services/{serviceId}/operations/{operationName}/template")

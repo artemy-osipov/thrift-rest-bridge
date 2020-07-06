@@ -97,10 +97,26 @@ class BridgeSpec {
     }
 
     @Test
+    void "services-operations endpoint should interpret primitive proxy result in wrapper"() {
+        doReturn(1)
+                .when(bridgeFacade)
+                .proxy(eq(operation()), eq(THRIFT_ENDPOINT), any())
+
+        RestAssured.given()
+                .body(proxyRequest())
+                .contentType(ContentType.JSON)
+                .post("/services/$SERVICE_ID/operations/$OPERATION_NAME")
+                .prettyPeek()
+                .then()
+                .statusCode(HttpStatus.SC_OK)
+                .body('response', equalTo(1))
+    }
+
+    @Test
     void "services-operations endpoint should interpret null proxy result as empty"() {
         doReturn(null)
                 .when(bridgeFacade)
-                .proxy(operation(), THRIFT_ENDPOINT, proxyRequestBody())
+                .proxy(eq(operation()), eq(THRIFT_ENDPOINT), any())
 
         RestAssured.given()
                 .body(proxyRequest())

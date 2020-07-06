@@ -5,6 +5,7 @@ import io.github.artemy.osipov.thrift.bridge.core.TService.TOperation;
 import io.github.artemy.osipov.thrift.bridge.core.TServiceRepository;
 import io.github.artemy.osipov.thrift.bridge.core.exception.NotFoundException;
 import io.github.artemy.osipov.thrift.bridge.micronaut.controllers.dto.ProxyRequest;
+import io.github.artemy.osipov.thrift.bridge.micronaut.controllers.dto.ProxyResponse;
 import io.github.artemy.osipov.thrift.bridge.micronaut.controllers.dto.Service;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.Body;
@@ -53,7 +54,19 @@ public class BridgeController {
 
         Object resp = bridgeFacade.proxy(operation, request.getEndpoint(), request.getBody().toString());
 
-        return resp == null ? "" : resp;
+        if (resp == null) {
+            return "";
+        } else if (isPrimitive(resp.getClass())) {
+            return new ProxyResponse(resp);
+        } else {
+            return resp;
+        }
+    }
+
+    private boolean isPrimitive(Class<?> type) {
+        return type == Double.class || type == Float.class || type == Long.class ||
+                type == Integer.class || type == Short.class || type == Character.class ||
+                type == Byte.class || type == Boolean.class || type == String.class;
     }
 
     @Get("/services/{serviceId}/operations/{operationName}/template")
