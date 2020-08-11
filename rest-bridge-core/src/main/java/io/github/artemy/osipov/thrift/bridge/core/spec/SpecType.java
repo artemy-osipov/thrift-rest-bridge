@@ -2,6 +2,7 @@ package io.github.artemy.osipov.thrift.bridge.core.spec;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.ToString;
 import lombok.Value;
 
 import java.util.EnumMap;
@@ -9,6 +10,7 @@ import java.util.Map;
 
 @Value
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
+@ToString(of = "type")
 public class SpecType {
 
     private static final Map<DataType, SpecType> PRIMITIVES = new EnumMap<>(DataType.class);
@@ -31,9 +33,5 @@ public class SpecType {
 
     public static SpecType array(SpecType containerType) {
         return new SpecType(DataType.ARRAY, containerType, null);
-    }
-
-    public String toString() {
-        return "SpecType(type=" + type + ", containerType=" + containerType + ", nested=" + nested.length + " count)";
     }
 }

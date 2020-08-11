@@ -125,13 +125,13 @@ class TestData {
                         new SpecField('i32Field', SpecType.primitive(DataType.NUMBER)),
                         new SpecField('i64Field', SpecType.primitive(DataType.NUMBER)),
                         new SpecField('doubleField', SpecType.primitive(DataType.NUMBER)),
-                        new SpecField('enumField', SpecType.primitive(DataType.STRING)),
+                        new SpecField('enumField', SpecType.primitive(DataType.ENUM)),
                         new SpecField('binaryField', SpecType.primitive(DataType.STRING)),
                         new SpecField('structField', simpleStructSpecType()),
                         new SpecField('listStructField', SpecType.array(simpleStructSpecType())),
                         new SpecField('unionField', SpecType.object(
-                                new SpecField('enum1', SpecType.primitive(DataType.STRING)),
-                                new SpecField('enum2', SpecType.primitive(DataType.STRING))
+                                new SpecField('enum1', SpecType.primitive(DataType.ENUM)),
+                                new SpecField('enum2', SpecType.primitive(DataType.ENUM))
                         ))
                 )),
                 new SpecField('listStructField', SpecType.array(simpleStructSpecType())),
@@ -168,7 +168,7 @@ class TestData {
             "i32Field": 0,
             "i64Field": 0,
             "doubleField": 0,
-            "enumField": "",
+            "enumField": null,
             "binaryField": "",
             "structField": {
               "f1": false,
@@ -179,8 +179,8 @@ class TestData {
               "f2": ""
             }],
             "unionField": {
-              "enum1": "",
-              "enum2": ""
+              "enum1": null,
+              "enum2": null
             }
           },
           "listStructField": [{

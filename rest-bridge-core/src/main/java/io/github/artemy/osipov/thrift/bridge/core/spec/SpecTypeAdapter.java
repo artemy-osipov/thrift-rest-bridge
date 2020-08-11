@@ -47,7 +47,10 @@ public class SpecTypeAdapter {
         if (isAssignable(clazz, Number.class, byte.class, short.class, int.class, long.class, float.class, double.class)) {
             return SpecType.primitive(DataType.NUMBER);
         }
-        if (isAssignable(clazz, String.class, Enum.class, byte[].class, ByteBuffer.class)) {
+        if (isAssignable(clazz, Enum.class)) {
+            return SpecType.primitive(DataType.ENUM);
+        }
+        if (isAssignable(clazz, String.class, byte[].class, ByteBuffer.class)) {
             return SpecType.primitive(DataType.STRING);
         }
         if (isAssignable(clazz, Boolean.class, boolean.class)) {

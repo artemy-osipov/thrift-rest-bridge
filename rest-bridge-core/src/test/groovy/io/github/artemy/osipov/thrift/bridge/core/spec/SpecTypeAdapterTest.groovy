@@ -44,7 +44,7 @@ class SpecTypeAdapterTest {
                 Arguments.of(double.class, SpecType.primitive(DataType.NUMBER)),
                 Arguments.of(Double.class, SpecType.primitive(DataType.NUMBER)),
                 Arguments.of(String.class, SpecType.primitive(DataType.STRING)),
-                Arguments.of(Enum.class, SpecType.primitive(DataType.STRING)),
+                Arguments.of(Enum.class, SpecType.primitive(DataType.ENUM)),
                 Arguments.of(byte[].class, SpecType.primitive(DataType.STRING)),
                 Arguments.of(ByteBuffer.class, SpecType.primitive(DataType.STRING))
         )
@@ -54,7 +54,7 @@ class SpecTypeAdapterTest {
     void "should build spec from enum"() {
         def spec = adapter.from(TestEnum)
 
-        assert spec == SpecType.primitive(DataType.STRING)
+        assert spec == SpecType.primitive(DataType.ENUM)
     }
 
     @Test
@@ -69,8 +69,8 @@ class SpecTypeAdapterTest {
         def spec = adapter.from(TestUnion)
 
         assert spec == SpecType.object(
-                new SpecField("enum1", SpecType.primitive(DataType.STRING)),
-                new SpecField("enum2", SpecType.primitive(DataType.STRING))
+                new SpecField("enum1", SpecType.primitive(DataType.ENUM)),
+                new SpecField("enum2", SpecType.primitive(DataType.ENUM))
         )
     }
 

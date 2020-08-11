@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum DataType {
+    ENUM(true),
     STRING(true),
     NUMBER(true),
     BOOLEAN(true),
