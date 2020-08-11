@@ -45,8 +45,17 @@ public class TemplateSpec {
     }
 
     private ArrayNode array(SpecType containerType, int depth) {
-        return nodeFactory.arrayNode()
-                .add(element(containerType, depth - 1));
+        ArrayNode array = nodeFactory.arrayNode();
+
+        if (depth > 1) {
+            JsonNode nested = element(containerType, depth - 1);
+
+            if (!nested.isNull()) {
+                array.add(nested);
+            }
+        }
+
+        return array;
     }
 
     private ObjectNode object(SpecField[] fields, int depth) {
