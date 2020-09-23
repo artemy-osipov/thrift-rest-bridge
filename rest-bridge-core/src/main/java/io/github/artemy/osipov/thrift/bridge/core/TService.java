@@ -42,7 +42,7 @@ public class TService {
         this.name = clazz.getEnclosingClass().getSimpleName();
         this.thriftServiceClass = clazz;
         this.thriftClientFactory = thriftClientFactory;
-        this.operations = Arrays.stream(serviceInterface.getDeclaredMethods())
+        this.operations = Arrays.stream(serviceInterface.getMethods())
                 .map(m -> new TOperation(m.getName(), m))
                 .collect(Collectors.toMap(TOperation::getName, Function.identity()));
     }

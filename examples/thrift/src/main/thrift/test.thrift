@@ -72,3 +72,6 @@ service AnotherTestService {
         1: string simpleField
     )
 }
+
+service EmptyTestService {
+}

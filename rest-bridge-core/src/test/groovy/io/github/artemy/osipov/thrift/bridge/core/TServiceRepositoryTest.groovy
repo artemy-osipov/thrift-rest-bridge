@@ -11,7 +11,7 @@ class TServiceRepositoryTest {
     def repository = new TServiceRepository('io.github.artemy.osipov.thrift.bridge.test')
 
     @Test
-    void "list should return all services"() {
+    void "list should return all services with operations"() {
         def res = repository.list()
 
         assert res == services()

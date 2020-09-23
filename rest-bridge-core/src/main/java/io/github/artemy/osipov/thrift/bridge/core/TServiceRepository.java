@@ -21,6 +21,7 @@ public class TServiceRepository {
                 .getSubTypesOf(TServiceClient.class)
                 .stream()
                 .map(TService::new)
+                .filter(s -> !s.getOperations().isEmpty())
                 .collect(Collectors.toMap(TService::getId, Function.identity()));
     }
 
