@@ -1,7 +1,18 @@
 plugins {
     id 'nebula.release' version '15.3.1'
-    id 'com.jfrog.bintray' version '1.8.5' apply false
     id 'com.github.ben-manes.versions' version '0.38.0'
+    id 'io.github.gradle-nexus.publish-plugin' version '1.0.0'
+}
+
+nexusPublishing {
+    repositories {
+        sonatype {
+            username.set(System.getenv('SONATYPE_USER'))
+            password.set(System.getenv('SONATYPE_TOKEN'))
+            nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
+            snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
+        }
+    }
 }
 
 def micronautModules = [
@@ -18,11 +29,13 @@ def publishModules = [
         project(':rest-bridge-spring-boot-starter')
 ]
 
+allprojects {
+    group = 'io.github.artemy-osipov.thrift'
+}
+
 subprojects {
     apply plugin: 'java'
     apply plugin: 'groovy'
-
-    group = 'io.github.artemy.osipov.thrift'
 
     java {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -71,7 +84,7 @@ configure(springModules) {
 
 configure(publishModules) {
     apply plugin: 'maven-publish'
-    apply plugin: 'com.jfrog.bintray'
+    apply plugin: 'signing'
 
     java {
         withJavadocJar()
@@ -86,21 +99,40 @@ configure(publishModules) {
         }
     }
 
-    bintray {
-        user = System.getenv('BINTRAY_USER')
-        key = System.getenv('BINTRAY_KEY')
-        publications = ['maven']
-        pkg {
-            repo = 'oss'
-            name = project.name
-            licenses = ['MIT']
-            desc = 'Thrift-Rest bridge for proxy thrift services'
-            websiteUrl = 'https://github.com/artemy-osipov/thrift-rest-bridge'
-            issueTrackerUrl = 'https://github.com/artemy-osipov/thrift-rest-bridge/issues'
-            vcsUrl = 'https://github.com/artemy-osipov/thrift-rest-bridge.git'
+    signing {
+        def signingKey = System.getenv('GPG_KEY')
+        def signingPassword = System.getenv('GPG_PASSWORD')
+        useInMemoryPgpKeys(signingKey, signingPassword)
+        sign publishing.publications
+    }
 
-            githubRepo = 'artemy-osipov/thrift-rest-bridge'
-            githubReleaseNotesFile = 'README.md'
+    publishing {
+        publications {
+            maven(MavenPublication) {
+                pom {
+                    name = project.name
+                    description = 'Thrift-Rest bridge for proxy thrift services'
+                    url = 'https://github.com/artemy-osipov/thrift-rest-bridge'
+                    licenses {
+                        license {
+                            name = 'MIT'
+                            url = 'https://opensource.org/licenses/MIT'
+                        }
+                    }
+                    developers {
+                        developer {
+                            id = 'artemy-osipov'
+                            name = 'Artemy Osipov'
+                            email = 'osipov.artemy@gmail.com'
+                        }
+                    }
+                    scm {
+                        connection = 'git@github.com:artemy-osipov/thrift-rest-bridge.git'
+                        developerConnection = 'git@github.com:artemy-osipov/thrift-rest-bridge.git'
+                        url = 'https://github.com/artemy-osipov/thrift-rest-bridge'
+                    }
+                }
+            }
         }
     }
 }
