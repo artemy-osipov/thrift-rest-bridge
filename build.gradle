@@ -1,7 +1,7 @@
 plugins {
-    id 'nebula.release' version '15.2.0'
+    id 'nebula.release' version '15.3.1'
     id 'com.jfrog.bintray' version '1.8.5' apply false
-    id 'com.github.ben-manes.versions' version '0.33.0'
+    id 'com.github.ben-manes.versions' version '0.38.0'
 }
 
 def micronautModules = [
@@ -30,14 +30,14 @@ subprojects {
     }
 
     repositories {
-        jcenter()
+        mavenCentral()
     }
 
     dependencies {
-        compileOnly 'org.projectlombok:lombok:1.18.12'
-        annotationProcessor 'org.projectlombok:lombok:1.18.12'
+        compileOnly 'org.projectlombok:lombok:1.18.20'
+        annotationProcessor 'org.projectlombok:lombok:1.18.20'
 
-        testImplementation 'org.codehaus.groovy:groovy-test:3.0.5'
+        testImplementation 'org.codehaus.groovy:groovy-test:3.0.7'
 
         def junitVersion = '5.7.0'
         testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
@@ -52,7 +52,7 @@ subprojects {
 
 configure(micronautModules) {
     dependencies {
-        def micronautBom = 'io.micronaut:micronaut-bom:2.0.3'
+        def micronautBom = 'io.micronaut:micronaut-bom:2.4.2'
         annotationProcessor platform(micronautBom)
         implementation platform(micronautBom)
         testAnnotationProcessor platform(micronautBom)
@@ -61,7 +61,7 @@ configure(micronautModules) {
 
 configure(springModules) {
     dependencies {
-        def springBootBom = 'org.springframework.boot:spring-boot-dependencies:2.3.4.RELEASE'
+        def springBootBom = 'org.springframework.boot:spring-boot-dependencies:2.4.4'
         implementation platform(springBootBom)
         annotationProcessor platform(springBootBom)
         annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
