@@ -89,9 +89,9 @@ public class SpecTypeAdapter {
                 .anyMatch(baseClass -> baseClass.isAssignableFrom(clazz));
     }
 
-    private Map<String, Type> extractFields(Class<? extends TBase> clazz) {
-        List<String> fieldNames = FieldMetaData.getStructMetaDataMap(clazz)
-                .keySet()
+    private Map<String, Type> extractFields(Class clazz) {
+        Map<TFieldIdEnum, ?> map = FieldMetaData.getStructMetaDataMap(clazz);
+        List<String> fieldNames = map.keySet()
                 .stream()
                 .map(TFieldIdEnum::getFieldName)
                 .collect(Collectors.toList());

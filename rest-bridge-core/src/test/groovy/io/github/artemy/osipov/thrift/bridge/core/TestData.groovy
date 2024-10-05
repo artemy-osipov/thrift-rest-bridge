@@ -41,7 +41,7 @@ class TestData {
         new TestComplexStruct().tap {
             stringField = 'some'
             boolField = true
-            byteField = 1 as byte
+            i8Field = 1 as byte
             i16Field = 2 as short
             i32Field = 3
             i64Field = 4
@@ -90,7 +90,7 @@ class TestData {
           {
             "stringField": "$thrift.stringField",
             "boolField": $thrift.boolField,
-            "byteField": $thrift.byteField,
+            "i8Field": $thrift.i8Field,
             "i16Field": $thrift.i16Field,
             "i32Field": $thrift.i32Field,
             "i64Field": $thrift.i64Field,
@@ -120,7 +120,7 @@ class TestData {
                 new SpecField('complexField', SpecType.object(
                         new SpecField('stringField', SpecType.primitive(DataType.STRING)),
                         new SpecField('boolField', SpecType.primitive(DataType.BOOLEAN)),
-                        new SpecField('byteField', SpecType.primitive(DataType.NUMBER)),
+                        new SpecField('i8Field', SpecType.primitive(DataType.NUMBER)),
                         new SpecField('i16Field', SpecType.primitive(DataType.NUMBER)),
                         new SpecField('i32Field', SpecType.primitive(DataType.NUMBER)),
                         new SpecField('i64Field', SpecType.primitive(DataType.NUMBER)),
@@ -163,7 +163,7 @@ class TestData {
           "complexField": {
             "stringField": "",
             "boolField": false,
-            "byteField": 0,
+            "i8Field": 0,
             "i16Field": 0,
             "i32Field": 0,
             "i64Field": 0,

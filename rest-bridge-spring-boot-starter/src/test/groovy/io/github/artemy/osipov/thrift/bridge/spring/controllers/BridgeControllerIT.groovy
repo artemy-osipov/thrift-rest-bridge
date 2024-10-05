@@ -6,7 +6,7 @@ import io.github.artemy.osipov.thrift.bridge.spec.BridgeSpec
 import org.junit.jupiter.api.BeforeEach
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.boot.web.server.LocalServerPort
+import org.springframework.boot.test.web.server.LocalServerPort
 
 @SpringBootTest(
         properties = "spring.main.allow-bean-definition-overriding=true",

@@ -4,8 +4,7 @@ import io.github.artemy.osipov.thrift.bridge.core.BridgeFacade
 import io.github.artemy.osipov.thrift.bridge.core.TServiceRepository
 import io.micronaut.context.annotation.Factory
 import io.micronaut.context.annotation.Primary
-
-import javax.inject.Singleton
+import jakarta.inject.Singleton
 
 import static org.mockito.Mockito.mock
 

@@ -3,7 +3,7 @@ namespace java io.github.artemy.osipov.thrift.bridge.test
 struct TestComplexStruct {
     1: string stringField
     2: bool boolField
-    3: byte byteField
+    3: i8 i8Field
     4: i16 i16Field
     5: i32 i32Field
     6: i64 i64Field

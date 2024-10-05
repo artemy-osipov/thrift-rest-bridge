@@ -4,10 +4,10 @@ import io.github.artemy.osipov.thrift.bridge.core.BridgeFacade
 import io.github.artemy.osipov.thrift.bridge.core.TServiceRepository
 import io.github.artemy.osipov.thrift.bridge.spec.BridgeSpec
 import io.micronaut.runtime.server.EmbeddedServer
-import io.micronaut.test.annotation.MicronautTest
+import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import org.junit.jupiter.api.BeforeEach
 
-import javax.inject.Inject
+import jakarta.inject.Inject
 
 @MicronautTest
 class BridgeControllerIT extends BridgeSpec {
