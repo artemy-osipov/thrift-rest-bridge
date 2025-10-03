@@ -3,7 +3,7 @@ plugins {
 }
 
 dependencies {
-    val springBootBom = "org.springframework.boot:spring-boot-dependencies:3.3.4"
+    val springBootBom = "org.springframework.boot:spring-boot-dependencies:3.5.6"
     implementation(platform(springBootBom))
     annotationProcessor(platform(springBootBom))
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")

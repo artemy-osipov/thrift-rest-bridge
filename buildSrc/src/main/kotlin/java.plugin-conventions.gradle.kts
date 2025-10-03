@@ -11,11 +11,11 @@ repositories {
 }
 
 dependencies {
-    compileOnly("org.projectlombok:lombok:1.18.34")
-    annotationProcessor("org.projectlombok:lombok:1.18.34")
+    compileOnly("org.projectlombok:lombok:1.18.42")
+    annotationProcessor("org.projectlombok:lombok:1.18.42")
 
-    testImplementation("org.apache.groovy:groovy-test:4.0.23")
-    testImplementation("org.junit.jupiter:junit-jupiter:5.11.2")
+    testImplementation("org.apache.groovy:groovy:4.0.28")
+    testImplementation("org.junit.jupiter:junit-jupiter:6.0.0")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 

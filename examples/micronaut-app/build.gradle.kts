@@ -4,7 +4,7 @@ plugins {
 }
 
 dependencies {
-    runtimeOnly("ch.qos.logback:logback-classic:1.5.8")
+    runtimeOnly("ch.qos.logback:logback-classic:1.5.19")
 
     implementation(project(":examples:thrift"))
     implementation(project(":rest-bridge-micronaut"))

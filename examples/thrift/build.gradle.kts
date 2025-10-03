@@ -1,5 +1,4 @@
 import org.apache.tools.ant.taskdefs.condition.Os
-import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
 
 plugins {
     `java-library`

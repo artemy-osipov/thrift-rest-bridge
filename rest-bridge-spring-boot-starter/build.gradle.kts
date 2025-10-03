@@ -11,8 +11,8 @@ dependencies {
 
     api(project(":rest-bridge-core"))
 
-    implementation("org.mapstruct:mapstruct:1.6.2")
-    annotationProcessor("org.mapstruct:mapstruct-processor:1.6.2")
+    implementation("org.mapstruct:mapstruct:1.6.3")
+    annotationProcessor("org.mapstruct:mapstruct-processor:1.6.3")
 
     implementation("io.github.artemy-osipov.thrift:jackson-datatype-thrift:0.4.3")
 

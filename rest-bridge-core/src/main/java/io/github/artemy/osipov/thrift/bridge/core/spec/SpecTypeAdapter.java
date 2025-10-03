@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 import static org.reflections.ReflectionUtils.withName;
 import static org.reflections.ReflectionUtils.withParametersCount;
@@ -27,8 +26,7 @@ public class SpecTypeAdapter {
 
     public SpecType from(Type type) {
         Class<?> clazz;
-        if (type instanceof ParameterizedType) {
-            ParameterizedType parameterizedType = (ParameterizedType) type;
+        if (type instanceof ParameterizedType parameterizedType) {
             clazz = (Class<?>) parameterizedType.getRawType();
             if (Collection.class.isAssignableFrom(clazz)
                     && parameterizedType.getActualTypeArguments().length == 1) {
@@ -94,7 +92,7 @@ public class SpecTypeAdapter {
         List<String> fieldNames = map.keySet()
                 .stream()
                 .map(TFieldIdEnum::getFieldName)
-                .collect(Collectors.toList());
+                .toList();
 
         Map<String, Type> fields = new LinkedHashMap<>();
         for (String fieldName : fieldNames) {

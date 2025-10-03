@@ -4,9 +4,9 @@ plugins {
 }
 
 dependencies {
-    implementation("org.junit.jupiter:junit-jupiter-api:5.11.2")
-    implementation("io.rest-assured:rest-assured:5.5.0")
-    api("org.mockito:mockito-core:5.14.1")
+    implementation("org.junit.jupiter:junit-jupiter-api:6.0.0")
+    implementation("io.rest-assured:rest-assured:5.5.6")
+    api("org.mockito:mockito-core:5.20.0")
 
     implementation(project(":rest-bridge-core"))
     implementation(project(":examples:thrift"))

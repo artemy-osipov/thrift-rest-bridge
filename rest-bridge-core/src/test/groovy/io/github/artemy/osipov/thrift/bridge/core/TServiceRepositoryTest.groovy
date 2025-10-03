@@ -1,9 +1,9 @@
 package io.github.artemy.osipov.thrift.bridge.core
 
 import io.github.artemy.osipov.thrift.bridge.core.exception.NotFoundException
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
-import static groovy.test.GroovyAssert.shouldFail
 import static io.github.artemy.osipov.thrift.bridge.core.TestData.*
 
 class TServiceRepositoryTest {
@@ -26,7 +26,7 @@ class TServiceRepositoryTest {
 
     @Test
     void "should fail filter service by id when requested by unknown id"() {
-        shouldFail(NotFoundException) {
+        Assertions.assertThrows(NotFoundException) {
             repository.findById('unknown')
         }
     }

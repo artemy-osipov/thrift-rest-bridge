@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import java.util.Collection;
-import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -32,7 +31,7 @@ public class BridgeController {
         return serviceRepository.list()
                 .stream()
                 .map(ModelMapper.INSTANCE::map)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @GetMapping("/services/{serviceId}")

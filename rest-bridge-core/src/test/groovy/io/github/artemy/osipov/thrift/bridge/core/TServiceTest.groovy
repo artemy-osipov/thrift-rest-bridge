@@ -2,9 +2,9 @@ package io.github.artemy.osipov.thrift.bridge.core
 
 import io.github.artemy.osipov.thrift.bridge.core.exception.NotFoundException
 import io.github.artemy.osipov.thrift.bridge.test.TestService
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
-import static groovy.test.GroovyAssert.shouldFail
 import static io.github.artemy.osipov.thrift.bridge.core.TestData.*
 
 class TServiceTest {
@@ -27,7 +27,7 @@ class TServiceTest {
 
     @Test
     void "should fail return operation when requested by unknown name"() {
-        shouldFail(NotFoundException) {
+        Assertions.assertThrows(NotFoundException) {
             service.operation('unknown')
         }
     }

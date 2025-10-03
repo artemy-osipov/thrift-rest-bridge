@@ -14,8 +14,8 @@ dependencies {
     api("io.micronaut:micronaut-jackson-databind")
     api("io.micronaut.validation:micronaut-validation")
 
-    annotationProcessor("org.mapstruct:mapstruct-processor:1.6.2")
-    implementation("org.mapstruct:mapstruct:1.6.2")
+    annotationProcessor("org.mapstruct:mapstruct-processor:1.6.3")
+    implementation("org.mapstruct:mapstruct:1.6.3")
 
     implementation("io.github.artemy-osipov.thrift:jackson-datatype-thrift:0.4.3")
     implementation("com.fasterxml.jackson.core:jackson-databind")

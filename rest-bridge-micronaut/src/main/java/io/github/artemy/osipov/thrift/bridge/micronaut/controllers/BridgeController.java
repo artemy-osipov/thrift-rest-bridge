@@ -15,12 +15,13 @@ import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.PathVariable;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.http.annotation.QueryValue;
+import io.micronaut.scheduling.TaskExecutors;
+import io.micronaut.scheduling.annotation.ExecuteOn;
 import lombok.RequiredArgsConstructor;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import java.util.Collection;
-import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -34,7 +35,7 @@ public class BridgeController {
         return serviceRepository.list()
                 .stream()
                 .map(ModelMapper.INSTANCE::map)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Get("/services/{serviceId}")
