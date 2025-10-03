@@ -45,6 +45,7 @@ public class BridgeController {
         );
     }
 
+    @ExecuteOn(TaskExecutors.BLOCKING)
     @Post("/services/{serviceId}/operations/{operationName}")
     public Object proxy(
             @PathVariable String serviceId,
