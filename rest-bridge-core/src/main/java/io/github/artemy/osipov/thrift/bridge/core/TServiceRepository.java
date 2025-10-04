@@ -1,8 +1,9 @@
 package io.github.artemy.osipov.thrift.bridge.core;
 
 import io.github.artemy.osipov.thrift.bridge.core.exception.NotFoundException;
+import io.github.classgraph.ClassGraph;
+import io.github.classgraph.ScanResult;
 import org.apache.thrift.TServiceClient;
-import org.reflections.Reflections;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -14,15 +15,36 @@ import java.util.stream.Collectors;
 
 public class TServiceRepository {
 
-    private final Map<String, TService> serviceMap;
+    private final String basePackage;
+    private Map<String, TService> serviceMap;
 
     public TServiceRepository(String basePackage) {
-        serviceMap = new Reflections(basePackage)
-                .getSubTypesOf(TServiceClient.class)
-                .stream()
-                .map(TService::new)
-                .filter(s -> !s.getOperations().isEmpty())
-                .collect(Collectors.toMap(TService::getId, Function.identity()));
+        this.basePackage = basePackage;
+        reload(Thread.currentThread().getContextClassLoader());
+    }
+
+    public void reload(ClassLoader loader) {
+        try (ScanResult result = new ClassGraph()
+                .enableClassInfo()
+                .acceptPackages(basePackage)
+                .overrideClassLoaders(loader)
+                .scan()) {
+            serviceMap = result
+                    .getSubclasses(TServiceClient.class)
+                    .loadClasses()
+                    .stream()
+                    .map(clazz -> new TService((Class<? extends TServiceClient>) clazz))
+                    .filter(s -> !s.getOperations().isEmpty())
+                    .collect(Collectors.toMap(TService::getId, Function.identity()));
+        }
+    }
+
+    public void reload(ThriftModelArtifactRepository repository) {
+        if (!repository.hasArtifact()) {
+            return;
+        }
+        repository.fetchLatest();
+        reload(repository.getClassLoader());
     }
 
     public Collection<TService> list() {
@@ -33,10 +55,10 @@ public class TServiceRepository {
     }
 
     public TService findById(String id) {
-        if (serviceMap.containsKey(id)) {
-            return serviceMap.get(id);
+        if (!serviceMap.containsKey(id)) {
+            throw new NotFoundException(String.format("Service %s not found", id));
         }
 
-        throw new NotFoundException(String.format("Service %s not found", id));
+        return serviceMap.get(id);
     }
 }

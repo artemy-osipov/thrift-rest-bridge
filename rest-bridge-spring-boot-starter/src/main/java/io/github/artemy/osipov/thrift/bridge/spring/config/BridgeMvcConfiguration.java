@@ -1,5 +1,6 @@
 package io.github.artemy.osipov.thrift.bridge.spring.config;
 
+import io.github.artemy.osipov.thrift.bridge.core.ThriftModelArtifactRepository;
 import io.github.artemy.osipov.thrift.bridge.spring.controllers.BridgeController;
 import io.github.artemy.osipov.thrift.bridge.spring.controllers.ErrorHandler;
 import io.github.artemy.osipov.thrift.bridge.core.BridgeFacade;
@@ -8,9 +9,12 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplicat
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import io.github.artemy.osipov.thrift.jackson.ThriftModule;
+import org.springframework.context.annotation.Import;
+import org.springframework.util.StringUtils;
 
 @Configuration
 @ConditionalOnWebApplication
+@Import(BridgeController.class)
 public class BridgeMvcConfiguration {
 
     @Bean
@@ -34,8 +38,18 @@ public class BridgeMvcConfiguration {
     }
 
     @Bean
-    public BridgeController bridgeController(TServiceRepository repository, BridgeFacade bridgeFacade) {
-        return new BridgeController(repository, bridgeFacade);
+    public ThriftModelArtifactRepository thriftModelArtifactHolder(BridgeProperties properties) {
+        if (properties.getArtifact() == null
+                || !StringUtils.hasText(properties.getArtifact().getGroupId())) {
+            return new ThriftModelArtifactRepository(null);
+        }
+        return new ThriftModelArtifactRepository(
+                new ThriftModelArtifactRepository.ThriftModelArtifact(
+                        properties.getArtifact().getRepositories(),
+                        properties.getArtifact().getGroupId(),
+                        properties.getArtifact().getArtifactId()
+                )
+        );
     }
 }
 

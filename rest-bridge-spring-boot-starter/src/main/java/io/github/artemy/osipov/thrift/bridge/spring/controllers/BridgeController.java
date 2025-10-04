@@ -3,9 +3,13 @@ package io.github.artemy.osipov.thrift.bridge.spring.controllers;
 import io.github.artemy.osipov.thrift.bridge.core.BridgeFacade;
 import io.github.artemy.osipov.thrift.bridge.core.TService.TOperation;
 import io.github.artemy.osipov.thrift.bridge.core.TServiceRepository;
+import io.github.artemy.osipov.thrift.bridge.core.ThriftModelArtifactRepository;
+import io.github.artemy.osipov.thrift.bridge.core.exception.NotFoundException;
 import io.github.artemy.osipov.thrift.bridge.spring.controllers.dto.ProxyRequest;
 import io.github.artemy.osipov.thrift.bridge.spring.controllers.dto.ProxyResponse;
 import io.github.artemy.osipov.thrift.bridge.spring.controllers.dto.Service;
+import io.github.artemy.osipov.thrift.bridge.spring.controllers.dto.ThriftArtifact;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.util.ClassUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,8 +27,14 @@ import java.util.Collection;
 @RequiredArgsConstructor
 public class BridgeController {
 
-    private final TServiceRepository serviceRepository;
     private final BridgeFacade bridgeFacade;
+    private final TServiceRepository serviceRepository;
+    private final ThriftModelArtifactRepository modelArtifactRepository;
+
+    @PostConstruct
+    public void init() {
+        reloadThriftModel();
+    }
 
     @GetMapping("/services")
     public Collection<Service> services() {
@@ -71,5 +81,21 @@ public class BridgeController {
                 .operation(operationName);
 
         return bridgeFacade.template(operation, depth);
+    }
+
+    @GetMapping("/thrift-artifact")
+    public ThriftArtifact getThriftModel() {
+        if (!modelArtifactRepository.hasArtifact()) {
+            throw new NotFoundException();
+        }
+        return ModelMapper.INSTANCE.map(
+                modelArtifactRepository.getArtifact(),
+                modelArtifactRepository.getVersion()
+        );
+    }
+
+    @PostMapping("/thrift-artifact/reload")
+    public void reloadThriftModel() {
+        serviceRepository.reload(modelArtifactRepository);
     }
 }

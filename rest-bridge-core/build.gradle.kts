@@ -6,7 +6,8 @@ plugins {
 
 dependencies {
     api("org.apache.thrift:libthrift:0.20.0")
-    implementation("org.reflections:reflections:0.10.2")
+    implementation("io.github.classgraph:classgraph:4.8.181")
+    implementation("org.jboss.shrinkwrap.resolver:shrinkwrap-resolver-depchain:3.3.4")
     implementation("io.github.artemy-osipov.thrift:jackson-datatype-thrift:0.4.3")
 
     testImplementation(project(":examples:thrift"))

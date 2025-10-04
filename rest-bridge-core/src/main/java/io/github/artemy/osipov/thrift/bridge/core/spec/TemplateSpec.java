@@ -28,20 +28,14 @@ public class TemplateSpec {
             return nodeFactory.nullNode();
         }
 
-        switch (type.getType()) {
-            case BOOLEAN:
-                return nodeFactory.booleanNode(false);
-            case NUMBER:
-                return nodeFactory.numberNode(0);
-            case STRING:
-                return nodeFactory.textNode("");
-            case ARRAY:
-                return array(type.getContainerType(), depth);
-            case OBJECT:
-                return object(type.getNested(), depth);
-            default:
-                return nodeFactory.nullNode();
-        }
+        return switch (type.getType()) {
+            case BOOLEAN -> nodeFactory.booleanNode(false);
+            case NUMBER -> nodeFactory.numberNode(0);
+            case STRING -> nodeFactory.textNode("");
+            case ARRAY -> array(type.getContainerType(), depth);
+            case OBJECT -> object(type.getNested(), depth);
+            default -> nodeFactory.nullNode();
+        };
     }
 
     private ArrayNode array(SpecType containerType, int depth) {

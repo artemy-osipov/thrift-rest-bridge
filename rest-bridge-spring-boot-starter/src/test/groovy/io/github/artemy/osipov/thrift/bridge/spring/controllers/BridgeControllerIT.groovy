@@ -5,8 +5,8 @@ import io.github.artemy.osipov.thrift.bridge.core.TServiceRepository
 import io.github.artemy.osipov.thrift.bridge.spec.BridgeSpec
 import org.junit.jupiter.api.BeforeEach
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.boot.test.web.server.LocalServerPort
+import org.springframework.test.context.bean.override.mockito.MockitoBean
 
 @SpringBootTest(
         properties = "spring.main.allow-bean-definition-overriding=true",
@@ -16,10 +16,10 @@ class BridgeControllerIT extends BridgeSpec {
     @LocalServerPort
     int port
 
-    @MockBean
+    @MockitoBean
     TServiceRepository serviceRepository
 
-    @MockBean
+    @MockitoBean
     BridgeFacade bridgeFacade
 
     @BeforeEach

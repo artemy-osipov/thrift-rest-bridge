@@ -12,12 +12,11 @@ Add and configure starter for your project for adding thrift-rest api
 ### Dependency
 ```groovy
 repositories {
-  jcenter()
+  mavenCentral()
 }
 
 dependencies {
   // ...
-  implementation 'org.example:thrift-api:0.2.+' // dependency with thrift services/entity
   implementation 'io.github.artemy.osipov.thrift:rest-bridge-micronaut:0.1.0' // for micronaut project
   implementation 'io.github.artemy.osipov.thrift:rest-bridge-spring-boot-starter:0.1.0' // for spring project
   // ...
@@ -27,8 +26,15 @@ dependencies {
 ### Configuration properties
 
 ```yaml
-# package that will be scanned for thrift services
-bridge.thrift.scanPackage: org.example.thrift
+bridge.thrift:
+  # package that will be scanned for thrift services
+  scanPackage: org.example.thrift
+  # thrift model artifact
+  artifact:
+    repositories:
+      - https://repo1.maven.org/maven2/
+    groupId: org.example
+    artifactId: thrift-api
 ```
 
 ## Rest API
@@ -37,3 +43,5 @@ bridge.thrift.scanPackage: org.example.thrift
 * Show service: `GET /services/:serviceId`
 * Proxy operation: `POST /services/:serviceId/operations/:operationName`
 * Get operation template: `GET /services/:serviceId/operations/:operationName/template`
+* Get thrift artifact info: `GET /thrift-artifact`
+* Fetch the latest thrift artifact: `POST /thrift-artifact/reload`

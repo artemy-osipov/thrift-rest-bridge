@@ -3,7 +3,6 @@ package io.github.artemy.osipov.thrift.bridge.core.spec;
 import org.apache.thrift.TBase;
 import org.apache.thrift.TFieldIdEnum;
 import org.apache.thrift.meta_data.FieldMetaData;
-import org.reflections.ReflectionUtils;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -16,9 +15,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
-
-import static org.reflections.ReflectionUtils.withName;
-import static org.reflections.ReflectionUtils.withParametersCount;
 
 public class SpecTypeAdapter {
 
@@ -105,17 +101,14 @@ public class SpecTypeAdapter {
     }
 
     private Optional<Type> getFieldTypeByGetter(Class<?> clazz, String field) {
-        return ReflectionUtils.getMethods(clazz,
-                withName("get" + capitalize(field))
-                        .or(withName("is" + capitalize(field))),
-                withParametersCount(0)
-        )
-                .stream()
+        String capitalized = Character.toUpperCase(field.charAt(0)) + field.substring(1);
+        String getName = "get" + capitalized;
+        String isName = "is" + capitalized;
+
+        return Arrays.stream(clazz.getMethods())
+                .filter(m -> (m.getName().equals(getName) || m.getName().equals(isName)))
+                .filter(m -> m.getParameterCount() == 0)
                 .findFirst()
                 .map(Method::getGenericReturnType);
-    }
-
-    private String capitalize(String str) {
-        return str.substring(0, 1).toUpperCase() + str.substring(1);
     }
 }
