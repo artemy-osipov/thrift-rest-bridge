@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
+import org.jboss.shrinkwrap.resolver.api.maven.repository.MavenRemoteRepositories;
+import org.jboss.shrinkwrap.resolver.api.maven.repository.MavenUpdatePolicy;
 
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -27,7 +29,11 @@ public class ThriftModelArtifactRepository {
         var resolver = Maven.configureResolver()
                 .withMavenCentralRepo(false);
         for (String repository : artifact.repositories) {
-            resolver = resolver.withRemoteRepo(repository, repository, "default");
+            resolver = resolver.withRemoteRepo(
+                    MavenRemoteRepositories
+                            .createRemoteRepository(repository, repository, "default")
+                            .setUpdatePolicy(MavenUpdatePolicy.UPDATE_POLICY_ALWAYS)
+            );
         }
         var resolvedArtifacts = resolver
                 .resolve(artifact.groupId + ":" + artifact.artifactId + ":RELEASE")
